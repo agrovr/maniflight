@@ -14,6 +14,15 @@ updates:
         update-types:
           - minor
           - patch
+    ignore:
+      # Runtime/toolchain majors are reviewed deliberately against the Node 22/24 matrix.
+      - dependency-name: "*"
+        update-types:
+          - version-update:semver-major
+      # ncc 0.x minor releases may change the committed Action bundle substantially.
+      - dependency-name: "@vercel/ncc"
+        update-types:
+          - version-update:semver-minor
 
   - package-ecosystem: github-actions
     directory: /
