@@ -1,0 +1,10 @@
+import type { Rule } from "../model.js";
+export declare const securityPolicy: Rule;
+export declare const lockfilePresent: Rule;
+export declare const dependencyUpdates: Rule;
+export declare const workflowPermissions: Rule;
+export declare const actionReferencePinned: Rule;
+export declare const pullRequestTargetCheckout: Rule;
+export declare const untrustedContextInRun: Rule;
+export declare const sensitiveFilename: Rule;
+export declare const securityRules: Rule[];

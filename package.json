@@ -1,0 +1,42 @@
+{
+  "name": "maniflight",
+  "version": "0.1.0",
+  "description": "A read-only repository preflight for architecture, automation, security, and community readiness.",
+  "type": "module",
+  "private": true,
+  "engines": {
+    "node": ">=22"
+  },
+  "bin": {
+    "maniflight": "dist/cli.js"
+  },
+  "scripts": {
+    "clean": "node scripts/clean.mjs",
+    "build": "npm run clean && npm run build:ts && npm run bundle:action",
+    "build:ts": "tsc -p tsconfig.build.json",
+    "bundle:action": "ncc build src/action.ts -o dist/action --minify",
+    "check": "biome check . && tsc -p tsconfig.json --noEmit",
+    "demo": "tsx scripts/generate-demo.ts",
+    "format": "biome check --write .",
+    "scan": "tsx src/cli.ts scan",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "@actions/core": "^3.0.1",
+    "@actions/github": "^9.1.1",
+    "@octokit/rest": "^22.0.1",
+    "commander": "^15.0.0",
+    "ignore": "^7.0.6",
+    "yaml": "^2.9.0",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.5.3",
+    "@types/node": "^24.0.0",
+    "@vercel/ncc": "^0.38.4",
+    "tsx": "^4.23.1",
+    "typescript": "^6.0.0",
+    "vitest": "^4.1.10"
+  }
+}

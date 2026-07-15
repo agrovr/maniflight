@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Security report
+    url: https://github.com/agrovr/maniflight/blob/main/SECURITY.md
+    about: Report vulnerabilities privately; never include sensitive details in a public issue.
+  - name: Support guide
+    url: https://github.com/agrovr/maniflight/blob/main/SUPPORT.md
+    about: Review support scope and the information needed for a useful answer.

@@ -1,0 +1,10 @@
+{
+  "name": "hostile-fixture",
+  "private": true,
+  "scripts": {
+    "test": "node --test"
+  },
+  "dependencies": {
+    "example": "1.0.0"
+  }
+}

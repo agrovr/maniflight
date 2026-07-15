@@ -1,0 +1,2291 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="dark light" />
+  <meta http-equiv="Content-Security-Policy" content="default-src &#39;none&#39;; base-uri &#39;none&#39;; connect-src &#39;none&#39;; font-src &#39;none&#39;; form-action &#39;none&#39;; frame-src &#39;none&#39;; img-src data:; media-src &#39;none&#39;; object-src &#39;none&#39;; script-src &#39;sha256-Hz2KC1jyXt2JKlm4g1VHKIovL53DQIoMtgsGOlIheTg=&#39;; style-src &#39;sha256-yYQTPtnbbOrx6v+sJPDBs4QS3WiQ7ofI0h4AQicN+Ok=&#39;" />
+  <title>Maniflight · Maniflight repository preflight</title>
+  <style>
+:root {
+  color-scheme: dark light;
+  --bg: #090611;
+  --surface: #110b1c;
+  --surface-raised: #181024;
+  --surface-active: #231533;
+  --ink: #f8f3ff;
+  --muted: #c9bdd6;
+  --quiet: #9f91ad;
+  --line: #332442;
+  --line-strong: #765990;
+  --purple: #7650a8;
+  --lavender: #c2a5e8;
+  --orange: #f2a45b;
+  --pass: #79d8ae;
+  --warn: #f2a45b;
+  --fail: #ff8b9d;
+  --skip: #aaa0b4;
+  --focus: #f2a45b;
+  --max-width: 74rem;
+  --radius: 14px;
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  font-family:
+    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+}
+
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme]) {
+    --bg: #f7f4fb;
+    --surface: #ffffff;
+    --surface-raised: #f0eaf7;
+    --surface-active: #e7daf4;
+    --ink: #17101f;
+    --muted: #554a61;
+    --quiet: #6b6074;
+    --line: #d8cae4;
+    --line-strong: #9e82b7;
+    --purple: #613891;
+    --lavender: #70449c;
+    --orange: #8c480c;
+    --pass: #176b4a;
+    --warn: #80420b;
+    --fail: #9e2940;
+    --skip: #625a69;
+    --focus: #8c480c;
+  }
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+  --bg: #f7f4fb;
+  --surface: #ffffff;
+  --surface-raised: #f0eaf7;
+  --surface-active: #e7daf4;
+  --ink: #17101f;
+  --muted: #554a61;
+  --quiet: #6b6074;
+  --line: #d8cae4;
+  --line-strong: #9e82b7;
+  --purple: #613891;
+  --lavender: #70449c;
+  --orange: #8c480c;
+  --pass: #176b4a;
+  --warn: #80420b;
+  --fail: #9e2940;
+  --skip: #625a69;
+  --focus: #8c480c;
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  min-width: 20rem;
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-size: 1rem;
+  line-height: 1.55;
+  text-rendering: optimizeLegibility;
+}
+
+button,
+input,
+select {
+  font: inherit;
+}
+
+button,
+select {
+  cursor: pointer;
+}
+
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+summary:focus-visible,
+a:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 3px;
+}
+
+a {
+  color: var(--lavender);
+  text-underline-offset: 0.18em;
+}
+
+a:hover {
+  color: var(--orange);
+}
+
+.skip-link {
+  position: fixed;
+  inset: 0 auto auto 0;
+  z-index: 20;
+  padding: 0.75rem 1rem;
+  background: var(--ink);
+  color: var(--bg);
+  transform: translateY(-120%);
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+}
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 3.75rem;
+  padding: 0.75rem max(1rem, calc((100vw - var(--max-width)) / 2));
+  border-bottom: 1px solid var(--line);
+}
+
+.product-label {
+  margin: 0;
+  color: var(--lavender);
+  font-size: 0.78rem;
+  font-weight: 750;
+  letter-spacing: 0.08em;
+}
+
+.theme-toggle {
+  min-width: 4.5rem;
+  min-height: 2.75rem;
+  padding: 0.45rem 0.8rem;
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--ink);
+  font-size: 0.88rem;
+  font-weight: 650;
+  white-space: nowrap;
+  transition:
+    background-color 180ms var(--ease),
+    border-color 180ms var(--ease);
+}
+
+.theme-toggle:hover {
+  border-color: var(--orange);
+  background: var(--surface-raised);
+}
+
+.shell {
+  display: flex;
+  flex-direction: column;
+  width: min(calc(100% - 2rem), var(--max-width));
+  margin-inline: auto;
+  padding-block: 2.25rem 4.5rem;
+}
+
+.summary {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(16rem, 0.6fr);
+  gap: 2.5rem;
+  align-items: end;
+  padding-bottom: 2.4rem;
+}
+
+.summary-copy {
+  min-width: 0;
+}
+
+.summary h1 {
+  max-width: 18ch;
+  margin: 0.45rem 0 0.7rem;
+  font-size: 2.55rem;
+  line-height: 1.04;
+  letter-spacing: -0.035em;
+  overflow-wrap: anywhere;
+  text-wrap: balance;
+}
+
+.summary-text {
+  max-width: 68ch;
+  margin: 0;
+  color: var(--muted);
+  text-wrap: pretty;
+}
+
+.priority-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 0.9rem;
+  align-items: baseline;
+  margin-top: 0.9rem;
+  font-size: 0.875rem;
+}
+
+.priority-links > span {
+  color: var(--ink);
+  font-weight: 750;
+}
+
+.priority-links a {
+  color: var(--muted);
+}
+
+.priority-links a:hover {
+  color: var(--orange);
+}
+
+.repository-path {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin: 0;
+  color: var(--orange);
+  font-size: 0.875rem;
+  font-weight: 750;
+  letter-spacing: 0.03em;
+  overflow-wrap: anywhere;
+}
+
+.repository-path::before {
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 50%;
+  background: currentColor;
+  content: "";
+}
+
+.summary-state {
+  display: grid;
+  gap: 0.85rem;
+  padding: 1.15rem 0 0.2rem 1.35rem;
+  border-left: 1px solid var(--line-strong);
+}
+
+.verdict-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.verdict {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 750;
+}
+
+.score {
+  color: var(--orange);
+  font-variant-numeric: tabular-nums;
+  font-weight: 760;
+}
+
+.summary-state progress,
+.domain-control progress {
+  width: 100%;
+  height: 0.38rem;
+  overflow: hidden;
+  border: 0;
+  border-radius: 999px;
+  background: var(--surface-raised);
+  accent-color: var(--purple);
+}
+
+progress::-webkit-progress-bar {
+  background: var(--surface-raised);
+}
+
+progress::-webkit-progress-value {
+  background: var(--purple);
+}
+
+progress::-moz-progress-bar {
+  background: var(--purple);
+}
+
+.status-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem 1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+
+.status-summary strong {
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.section-heading {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 1.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.section-heading h2 {
+  margin: 0;
+  font-size: 1.4rem;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+.section-heading p {
+  max-width: 60ch;
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.93rem;
+  text-wrap: pretty;
+}
+
+.constellation-panel {
+  padding-block: 2rem 2.5rem;
+  border-block: 1px solid var(--line);
+}
+
+.constellation {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  grid-template-areas:
+    ". architecture ."
+    "security core automation"
+    ". community .";
+  grid-template-columns: minmax(11rem, 1fr) minmax(12rem, 1.15fr) minmax(11rem, 1fr);
+  gap: 1rem 1.5rem;
+  align-items: center;
+  min-height: 25rem;
+  padding: 1.25rem;
+}
+
+.orbit-art {
+  position: absolute;
+  inset: 2.5% 4%;
+  z-index: -1;
+  width: 92%;
+  height: 95%;
+  color: var(--line-strong);
+  pointer-events: none;
+}
+
+.orbit-line {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.2;
+  vector-effect: non-scaling-stroke;
+  transition:
+    stroke 180ms var(--ease),
+    opacity 180ms var(--ease);
+}
+
+.orbit-line[data-active="true"] {
+  stroke: var(--orange);
+  stroke-width: 2;
+  stroke-dasharray: 8 10;
+  animation: orbit-signal 2.4s linear infinite;
+}
+
+@keyframes orbit-signal {
+  to {
+    stroke-dashoffset: -36;
+  }
+}
+
+.domain-control {
+  min-width: 0;
+}
+
+.domain-control[data-domain="architecture"] {
+  grid-area: architecture;
+}
+
+.domain-control[data-domain="automation"] {
+  grid-area: automation;
+}
+
+.domain-control[data-domain="security"] {
+  grid-area: security;
+}
+
+.domain-control[data-domain="community"] {
+  grid-area: community;
+}
+
+.domain-button {
+  display: grid;
+  width: 100%;
+  min-height: 5.5rem;
+  gap: 0.65rem;
+  padding: 0.9rem 1rem;
+  border: 1px solid var(--line-strong);
+  border-radius: 12px;
+  background: var(--surface);
+  color: var(--ink);
+  text-align: left;
+  transition:
+    transform 180ms var(--ease),
+    background-color 180ms var(--ease),
+    border-color 180ms var(--ease);
+}
+
+.domain-button:hover {
+  transform: translateY(-2px);
+  border-color: var(--lavender);
+  background: var(--surface-raised);
+}
+
+.domain-button[aria-pressed="true"] {
+  border-color: var(--orange);
+  background: var(--surface-active);
+}
+
+.domain-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.domain-title {
+  font-weight: 750;
+}
+
+.domain-count {
+  color: var(--muted);
+  font-size: 0.875rem;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.domain-note {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.875rem;
+  line-height: 1.35;
+}
+
+.repo-core {
+  grid-area: core;
+  justify-self: center;
+  display: grid;
+  place-items: center;
+  width: min(100%, 11.5rem);
+  aspect-ratio: 1;
+  padding: 1.25rem;
+  border: 1px solid var(--purple);
+  border-radius: 50%;
+  background: var(--surface);
+  color: var(--ink);
+  text-align: center;
+  transition:
+    transform 180ms var(--ease),
+    border-color 180ms var(--ease),
+    background-color 180ms var(--ease);
+}
+
+.repo-core:hover {
+  transform: scale(1.025);
+  border-color: var(--orange);
+  background: var(--surface-raised);
+}
+
+.repo-core[aria-pressed="true"] {
+  border-color: var(--orange);
+}
+
+.repo-star {
+  display: block;
+  color: var(--orange);
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.repo-name {
+  display: block;
+  max-width: 11rem;
+  font-size: 0.95rem;
+  font-weight: 780;
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+}
+
+.repo-core-note {
+  display: block;
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+
+.findings-section {
+  padding-top: 2.5rem;
+}
+
+.filter-bar {
+  display: grid;
+  grid-template-columns: minmax(14rem, 1.5fr) repeat(3, minmax(8rem, 0.6fr)) auto;
+  gap: 0.8rem;
+  align-items: end;
+  margin-bottom: 1rem;
+  padding: 1rem;
+  border-block: 1px solid var(--line);
+  background: var(--bg);
+}
+
+.field {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.field label {
+  color: var(--muted);
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+
+.field input,
+.field select {
+  width: 100%;
+  min-height: 2.75rem;
+  padding: 0.55rem 0.7rem;
+  border: 1px solid var(--line-strong);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--ink);
+}
+
+.field input::placeholder {
+  color: var(--quiet);
+  opacity: 1;
+}
+
+.clear-filters {
+  min-height: 2.75rem;
+  padding: 0.55rem 0.85rem;
+  border: 1px solid var(--line-strong);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--ink);
+  font-weight: 680;
+}
+
+.clear-filters:hover {
+  border-color: var(--orange);
+  background: var(--surface-raised);
+}
+
+.result-count {
+  min-height: 1.5rem;
+  margin: 0 0 0.85rem;
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+
+.findings {
+  display: grid;
+  gap: 0.7rem;
+}
+
+.finding {
+  border-bottom: 1px solid var(--line);
+  background: var(--surface);
+}
+
+.finding[hidden] {
+  display: none;
+}
+
+.finding details {
+  border-radius: 10px;
+}
+
+.finding details[open] {
+  background: var(--surface-raised);
+}
+
+.finding summary {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 0.9rem;
+  align-items: center;
+  min-height: 4.6rem;
+  padding: 0.8rem 0.9rem;
+  cursor: pointer;
+  list-style: none;
+}
+
+.finding summary::-webkit-details-marker {
+  display: none;
+}
+
+.finding summary::after {
+  color: var(--muted);
+  content: "+";
+  font-size: 1.2rem;
+  font-weight: 500;
+}
+
+.finding details[open] summary::after {
+  content: "−";
+}
+
+.status-mark {
+  display: grid;
+  place-items: center;
+  width: 1.9rem;
+  height: 1.9rem;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+.status-pass {
+  color: var(--pass);
+}
+
+.status-warn {
+  color: var(--warn);
+}
+
+.status-fail {
+  color: var(--fail);
+}
+
+.status-skip,
+.status-unknown {
+  color: var(--skip);
+}
+
+.finding-heading {
+  min-width: 0;
+}
+
+.finding-heading strong {
+  display: block;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+.finding-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.7rem;
+  margin-top: 0.25rem;
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+
+.severity {
+  color: var(--ink);
+  font-weight: 700;
+  text-transform: capitalize;
+}
+
+.finding-body {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(14rem, 0.9fr);
+  gap: 1.4rem;
+  padding: 0.1rem 3.7rem 1.15rem;
+}
+
+.finding-body p {
+  max-width: 70ch;
+  margin: 0;
+  color: var(--muted);
+  text-wrap: pretty;
+}
+
+.finding-body h3 {
+  margin: 0 0 0.4rem;
+  font-size: 0.9375rem;
+}
+
+.evidence-list,
+.remediation-list {
+  margin: 0;
+  padding-left: 1.1rem;
+  color: var(--muted);
+  font-size: 0.9375rem;
+}
+
+.evidence-list code,
+.remediation-list code {
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+
+.empty-state {
+  padding: 2rem 1rem;
+  border-block: 1px solid var(--line);
+  color: var(--muted);
+  text-align: center;
+}
+
+.report-footer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.75rem 1.5rem;
+  margin-top: 3rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--line);
+  color: var(--quiet);
+  font-size: 0.875rem;
+}
+
+@media (max-width: 52rem) {
+  .summary {
+    grid-template-columns: 1fr;
+    gap: 1.35rem;
+  }
+
+  .summary-state {
+    padding: 1rem 0 0;
+    border-top: 1px solid var(--line-strong);
+    border-left: 0;
+  }
+
+  .constellation {
+    grid-template-areas:
+      "core core"
+      "architecture automation"
+      "security community";
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    min-height: 0;
+    padding: 1rem 0;
+  }
+
+  .orbit-art {
+    display: none;
+  }
+
+  .repo-core {
+    width: 11rem;
+    margin-bottom: 0.4rem;
+  }
+
+  .filter-bar {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .field-search {
+    grid-column: 1 / -1;
+  }
+
+  .finding-body {
+    grid-template-columns: 1fr;
+    padding-inline: 3.7rem 1rem;
+  }
+}
+
+@media (max-width: 37rem) {
+  .topbar {
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .product-label {
+    max-width: 12rem;
+  }
+
+  .shell {
+    width: min(calc(100% - 1.25rem), var(--max-width));
+    padding-top: 1.5rem;
+  }
+
+  .summary h1 {
+    font-size: 2rem;
+  }
+
+  .section-heading {
+    display: block;
+  }
+
+  .section-heading p {
+    margin-top: 0.45rem;
+  }
+
+  .findings-section {
+    order: 1;
+    padding-top: 2rem;
+    border-top: 1px solid var(--line);
+  }
+
+  .constellation-panel {
+    order: 2;
+    margin-top: 3rem;
+  }
+
+  .report-footer {
+    order: 3;
+  }
+
+  .constellation {
+    grid-template-areas:
+      "core core"
+      "architecture automation"
+      "security community";
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .domain-button {
+    min-height: 5.25rem;
+    padding: 0.8rem;
+  }
+
+  .domain-title-row {
+    display: grid;
+    gap: 0.1rem;
+  }
+
+  .filter-bar {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .field-search {
+    grid-column: 1 / -1;
+  }
+
+  .finding summary {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    gap: 0.65rem;
+  }
+
+  .finding-body {
+    padding: 0 1rem 1rem;
+  }
+
+  .report-footer {
+    display: block;
+  }
+
+  .report-footer span {
+    display: block;
+    margin-top: 0.35rem;
+  }
+}
+
+@media print {
+  :root {
+    color-scheme: light;
+    --bg: #ffffff;
+    --surface: #ffffff;
+    --surface-raised: #f5f2f8;
+    --ink: #17101f;
+    --muted: #4d4555;
+    --quiet: #625a69;
+    --line: #cfc6d6;
+    --line-strong: #8f809d;
+    --lavender: #5f337d;
+    --orange: #80420b;
+  }
+
+  .theme-toggle,
+  .filter-bar,
+  .skip-link {
+    display: none;
+  }
+
+  .shell {
+    width: 100%;
+    padding: 1rem 0;
+  }
+
+  .finding[hidden] {
+    display: block;
+  }
+
+  .finding details[open] {
+    break-inside: avoid;
+  }
+
+  .finding details:not([open]) > :not(summary) {
+    display: block !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+
+  .domain-button:hover,
+  .repo-core:hover {
+    transform: none;
+  }
+}
+</style>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to report</a>
+  <header class="topbar">
+    <p class="product-label">MANIFLIGHT / REPOSITORY PREFLIGHT</p>
+    <button class="theme-toggle" id="theme-toggle" type="button">Theme</button>
+  </header>
+  <main class="shell" id="main-content">
+
+    <section class="summary" aria-labelledby="report-title">
+      <div class="summary-copy">
+        <p class="repository-path"><span>Maniflight</span></p>
+        <h1 id="report-title">Repository preflight</h1>
+        <p class="summary-text">24 checks were evaluated; 1 needs attention or more context. Open a result to inspect its evidence and next action.</p>
+        <nav class="priority-links" aria-label="Priority findings">
+    <span>Priority findings</span>
+    <a href="#check-community-repository-metadata-25"><strong>Unknown:</strong> Repository metadata</a>
+  </nav>
+      </div>
+      <div class="summary-state" role="group" aria-label="Overall result">
+        <div class="verdict-row">
+          <p class="verdict">ready</p>
+          <span class="score">100%</span>
+        </div>
+        <progress max="100" value="100" aria-label="Overall readiness score: 100 percent">100%</progress>
+        <ul class="status-summary" aria-label="Check totals">
+          <li><strong>23</strong> passed</li>
+          <li><strong>0</strong> warnings</li>
+          <li><strong>0</strong> failed</li>
+          <li><strong>1</strong> unknown</li>
+          <li><strong>1</strong> not applicable</li>
+          <li><strong>99%</strong> confidence</li>
+          <li><strong>0</strong> high-severity findings</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="constellation-panel" aria-labelledby="constellation-title">
+      <div class="section-heading">
+        <h2 id="constellation-title">Readiness domains</h2>
+        <p>Choose a domain to narrow the evidence. Select the repository core to restore the complete view.</p>
+      </div>
+      <div class="constellation">
+
+    <svg class="orbit-art" viewBox="0 0 1000 520" aria-hidden="true" focusable="false">
+      <ellipse class="orbit-line" cx="500" cy="260" rx="350" ry="176" opacity="0.42" />
+      <ellipse class="orbit-line" cx="500" cy="260" rx="255" ry="238" opacity="0.3" />
+      <path class="orbit-line" data-orbit-domain="architecture" d="M500 260 C500 190 500 120 500 48" />
+      <path class="orbit-line" data-orbit-domain="automation" d="M500 260 C635 210 735 226 858 260" />
+      <path class="orbit-line" data-orbit-domain="security" d="M500 260 C365 310 265 294 142 260" />
+      <path class="orbit-line" data-orbit-domain="community" d="M500 260 C500 330 500 400 500 472" />
+      <circle cx="500" cy="260" r="64" fill="none" stroke="currentColor" stroke-width="1.2" opacity="0.48" />
+      <path d="M500 216 L510 250 L544 260 L510 270 L500 304 L490 270 L456 260 L490 250 Z" fill="currentColor" opacity="0.18" />
+    </svg>
+        <button
+          class="repo-core"
+          type="button"
+          data-domain-filter="all"
+          aria-controls="findings"
+          aria-pressed="true"
+          aria-label="Show checks from all readiness domains"
+        >
+          <span class="repo-star" aria-hidden="true">✦</span>
+          <span class="repo-name">Maniflight</span>
+          <span class="repo-core-note">All domains</span>
+        </button>
+
+    <div class="domain-control" data-domain="architecture">
+      <button
+        class="domain-button"
+        type="button"
+        data-domain-filter="architecture"
+        aria-controls="findings"
+        aria-pressed="false"
+        aria-label="Filter to Architecture: 5 checks, 100%, Pass"
+      >
+        <span class="domain-title-row">
+          <span class="domain-title">Architecture</span>
+          <span class="domain-count">5 checks</span>
+        </span>
+        <progress max="100" value="100" aria-hidden="true">100%</progress>
+        <span class="domain-note">Pass · 100% confidence</span>
+      </button>
+    </div>
+    <div class="domain-control" data-domain="automation">
+      <button
+        class="domain-button"
+        type="button"
+        data-domain-filter="automation"
+        aria-controls="findings"
+        aria-pressed="false"
+        aria-label="Filter to Automation: 4 checks, 100%, Pass"
+      >
+        <span class="domain-title-row">
+          <span class="domain-title">Automation</span>
+          <span class="domain-count">4 checks</span>
+        </span>
+        <progress max="100" value="100" aria-hidden="true">100%</progress>
+        <span class="domain-note">Pass · 100% confidence</span>
+      </button>
+    </div>
+    <div class="domain-control" data-domain="security">
+      <button
+        class="domain-button"
+        type="button"
+        data-domain-filter="security"
+        aria-controls="findings"
+        aria-pressed="false"
+        aria-label="Filter to Security: 8 checks, 100%, Pass"
+      >
+        <span class="domain-title-row">
+          <span class="domain-title">Security</span>
+          <span class="domain-count">8 checks</span>
+        </span>
+        <progress max="100" value="100" aria-hidden="true">100%</progress>
+        <span class="domain-note">Pass · 100% confidence</span>
+      </button>
+    </div>
+    <div class="domain-control" data-domain="community">
+      <button
+        class="domain-button"
+        type="button"
+        data-domain-filter="community"
+        aria-controls="findings"
+        aria-pressed="false"
+        aria-label="Filter to Community: 8 checks, 100%, Unknown"
+      >
+        <span class="domain-title-row">
+          <span class="domain-title">Community</span>
+          <span class="domain-count">8 checks</span>
+        </span>
+        <progress max="100" value="100" aria-hidden="true">100%</progress>
+        <span class="domain-note">Unknown · 92% confidence</span>
+      </button>
+    </div>
+      </div>
+    </section>
+
+    <section class="findings-section" aria-labelledby="findings-title">
+      <div class="section-heading">
+        <h2 id="findings-title">Checks and evidence</h2>
+        <p>A score is a navigation aid, not a certification. Use the evidence and confidence to make the decision.</p>
+      </div>
+
+    <search class="filter-bar" aria-label="Filter repository checks">
+      <div class="field field-search">
+        <label for="finding-search">Search evidence</label>
+        <input id="finding-search" type="search" placeholder="Rule, file, evidence, or action" autocomplete="off" />
+      </div>
+      <div class="field">
+        <label for="domain-filter">Domain</label>
+        <select id="domain-filter">
+          <option value="all">All domains</option>
+          <option value="architecture">Architecture</option><option value="automation">Automation</option><option value="security">Security</option><option value="community">Community</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="status-filter">Status</label>
+        <select id="status-filter">
+          <option value="all">All statuses</option>
+          <option value="pass">Pass</option>
+          <option value="warn">Warning</option>
+          <option value="fail">Fail</option>
+          <option value="unknown">Unknown</option>
+          <option value="not_applicable">Not applicable</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="severity-filter">Severity</label>
+        <select id="severity-filter">
+          <option value="all">All severities</option>
+          <option value="high">High</option>
+          <option value="medium">Medium</option>
+          <option value="low">Low</option>
+          <option value="info">Info</option>
+        </select>
+      </div>
+      <button class="clear-filters" id="clear-filters" type="button">Reset</button>
+    </search>
+      <p class="result-count" id="result-count" role="status" aria-live="polite">25 checks shown</p>
+      <noscript>
+        <p class="result-count">Interactive filters require JavaScript; every check remains available below.</p>
+      </noscript>
+      <div class="findings" id="findings">
+
+    <article
+      class="finding"
+      data-finding
+      data-domain="architecture"
+      data-status="pass"
+      data-severity="medium"
+      data-search="architecture/manifest-present Project manifest A machine-readable project manifest makes the repository reproducible and navigable. pass medium Add the standard manifest for the repository&#39;s primary language or build system.  package.json — npm manifest"
+    >
+      <details id="check-architecture-manifest-present-1">
+        <summary>
+          <span class="status-mark status-pass" aria-hidden="true">✓</span>
+          <span class="finding-heading">
+            <strong>Project manifest</strong>
+            <span class="finding-meta">
+              <span>Architecture</span>
+              <span class="severity">Medium severity</span>
+              <span>Pass</span>
+              <span>architecture/manifest-present</span>
+            </span>
+          </span>
+        </summary>
+        <div class="finding-body">
+          <div>
+            <h3>What was checked</h3>
+            <p>A machine-readable project manifest makes the repository reproducible and navigable.</p>
+
+
+          </div>
+          <div>
+            <h3>Evidence</h3>
+            <ul class="evidence-list"><li><code>package.json</code> — npm manifest</li></ul>
+            <div>
+        <h3>Next action</h3>
+        <p>Add the standard manifest for the repository&#39;s primary language or build system.</p>
+      </div>
+          </div>
+        </div>
+      </details>
+    </article>
+    <article
+      class="finding"
+      data-finding
+      data-domain="architecture"
+      data-status="pass"
+      data-severity="low"
+      data-search="architecture/source-boundary Source boundary Production code is grouped under a recognizable application, package, or source directory. pass low Group production code under src/, app/, packages/, cmd/, internal/, or lib/.  src — Recognized source boundary"
+    >
+      <details id="check-architecture-source-boundary-2">
+        <summary>
+          <span class="status-mark status-pass" aria-hidden="true">✓</span>
+          <span class="finding-heading">
+            <strong>Source boundary</strong>
+            <span class="finding-meta">
+              <span>Architecture</span>
+              <span class="severity">Low severity</span>
+              <span>Pass</span>
+              <span>architecture/source-boundary</span>
+            </span>
+          </span>
+        </summary>
+        <div class="finding-body">
+          <div>
+            <h3>What was checked</h3>
+            <p>Production code is grouped under a recognizable application, package, or source directory.</p>
+
+
+          </div>
+          <div>
+            <h3>Evidence</h3>
+            <ul class="evidence-list"><li><code>src</code> — Recognized source boundary</li></ul>
+            <div>
+        <h3>Next action</h3>
+        <p>Group production code under src/, app/, packages/, cmd/, internal/, or lib/.</p>
+      </div>
+          </div>
+        </div>
+      </details>
+    </article>
+    <article
+      class="finding"
+      data-finding
+      data-domain="architecture"
+      data-status="pass"
+      data-severity="medium"
+      data-search="architecture/test-capability Test capability The repository includes tests and a discoverable way to run them. pass medium Add focused tests and expose a standard test command in the project manifest.  7 test file(s) detected A test command or test configuration was detected"
+    >
+      <details id="check-architecture-test-capability-3">
+        <summary>
+          <span class="status-mark status-pass" aria-hidden="true">✓</span>
+          <span class="finding-heading">
+            <strong>Test capability</strong>
+            <span class="finding-meta">
+              <span>Architecture</span>
+              <span class="severity">Medium severity</span>
+              <span>Pass</span>
+              <span>architecture/test-capability</span>
+            </span>
+          </span>
+        </summary>
+        <div class="finding-body">
+          <div>
+            <h3>What was checked</h3>
+            <p>The repository includes tests and a discoverable way to run them.</p>
+
+
+          </div>
+          <div>
+            <h3>Evidence</h3>
+            <ul class="evidence-list"><li>7 test file(s) detected</li><li>A test command or test configuration was detected</li></ul>
+            <div>
+        <h3>Next action</h3>
+        <p>Add focused tests and expose a standard test command in the project manifest.</p>
+      </div>
+          </div>
+        </div>
+      </details>
+    </article>
+    <article
+      class="finding"
+      data-finding
+      data-domain="architecture"
+      data-status="pass"
+      data-severity="medium"
+      data-search="architecture/typescript-strict TypeScript strictness TypeScript repositories explicitly enable strict type checking. pass medium Add a tsconfig.json and enable compilerOptions.strict.  tsconfig.json — strict mode is enabled"
+    >
+      <details id="check-architecture-typescript-strict-4">
+        <summary>
+          <span class="status-mark status-pass" aria-hidden="true">✓</span>
+          <span class="finding-heading">
+            <strong>TypeScript strictness</strong>
+            <span class="finding-meta">
+              <span>Architecture</span>
+              <span class="severity">Medium severity</span>
+              <span>Pass</span>
+              <span>architecture/typescript-strict</span>
+            </span>
+          </span>
+        </summary>
+        <div class="finding-body">
+          <div>
+            <h3>What was checked</h3>
+            <p>TypeScript repositories explicitly enable strict type checking.</p>
+            <p><a href="https://www.typescriptlang.org/tsconfig/#strict" target="_blank" rel="noreferrer noopener">Read the check documentation</a></p>
+
+          </div>
+          <div>
+            <h3>Evidence</h3>
+            <ul class="evidence-list"><li><code>tsconfig.json</code> — strict mode is enabled</li></ul>
+            <div>
+        <h3>Next action</h3>
+        <p>Add a tsconfig.json and enable compilerOptions.strict.</p>
+      </div>
+          </div>
+        </div>
+      </details>
+    </article>
+    <article
+      class="finding"
+      data-finding
+      data-domain="architecture"
+      data-status="pass"
+      data-severity="medium"
+      data-search="architecture/package-entrypoints Package entrypoints Declared npm entrypoints resolve to files in the inspected checkout. pass medium Correct stale entrypoint paths or ensure required build outputs exist before publishing.  package.json — bin.maniflight points to dist/cli.js"
+    >
+      <details id="check-architecture-package-entrypoints-5">
+        <summary>
+          <span class="status-mark status-pass" aria-hidden="true">✓</span>
+          <span class="finding-heading">
+            <strong>Package entrypoints</strong>
+            <span class="finding-meta">
+              <span>Architecture</span>
+              <span class="severity">Medium severity</span>
+              <span>Pass</span>
+              <span>architecture/package-entrypoints</span>
+            </span>
+          </span>
+        </summary>
+        <div class="finding-body">
+          <div>
+            <h3>What was checked</h3>
+            <p>Declared npm entrypoints resolve to files in the inspected checkout.</p>
+
+
+          </div>
+          <div>
+            <h3>Evidence</h3>
+            <ul class="evidence-list"><li><code>package.json</code> — bin.maniflight points to dist/cli.js</li></ul>
+            <div>
+        <h3>Next action</h3>
+        <p>Correct stale entrypoint paths or ensure required build outputs exist before publishing.</p>
+      </div>
+          </div>
+        </div>
+      </details>
+    </article>
+    <article
+      class="finding"
+      data-finding
+      data-domain="automation"
+      data-status="pass"
+      data-severity="medium"
+      data-search="automation/workflow-present Automation workflow At least one readable GitHub Actions workflow is present. pass medium Add a minimal validation workflow that runs on pull requests.  .github/workflows/ci.yml — Readable workflow .github/workflows/codeql.yml — Readable workflow .github/workflows/dogfood.yml — Readable workflow .github/workflows/pages.yml — Readable workflow"
+    >
+      <details id="check-automation-workflow-present-6">
+        <summary>
+          <span class="status-mark status-pass" aria-hidden="true">✓</span>
+          <span class="finding-heading">
+            <strong>Automation workflow</strong>
+            <span class="finding-meta">
+              <span>Automation</span>
+              <span class="severity">Medium severity</span>
+              <span>Pass</span>
+              <span>automation/workflow-present</span>
+            </span>
+          </span>
+        </summary>
+        <div class="finding-body">
+          <div>
+            <h3>What was checked</h3>
+            <p>At least one readable GitHub Actions workflow is present.</p>
+
+
+          </div>
+          <div>
+            <h3>Evidence</h3>
+            <ul class="evidence-list"><li><code>.github/workflows/ci.yml</code> — Readable workflow</li><li><code>.github/workflows/codeql.yml</code> — Readable workflow</li><li><code>.github/workflows/dogfood.yml</code> — Readable workflow</li><li><code>.github/workflows/pages.yml</code> — Readable workflow</li></ul>
+            <div>
+        <h3>Next action</h3>
+        <p>Add a minimal validation workflow that runs on pull requests.</p>
+      </div>
+          </div>
+        </div>
+      </details>
+    </article>
+    <article
+      class="finding"
+      data-finding
+      data-domain="automation"
+      data-status="pass"
+      data-severity="high"
+      data-search="automation/pr-validation Pull request validation Pull requests run tests plus at least one additional quality gate. pass high Run tests and lint, build, typecheck, or security checks for pull requests.  .github/workflows/ci.yml — Runs on pull_request .github/workflows/codeql.yml — Runs on pull_request Test gate detected Additional quality gate detected"
+    >
+      <details id="check-automation-pr-validation-7">
+        <summary>
+          <span class="status-mark status-pass" aria-hidden="true">✓</span>
+          <span class="finding-heading">
+            <strong>Pull request validation</strong>
+            <span class="finding-meta">
+              <span>Automation</span>
+              <span class="severity">High severity</span>
+              <span>Pass</span>
+              <span>automation/pr-validation</span>
+            </span>
+          </span>
+        </summary>
+        <div class="finding-body">
+          <div>
+            <h3>What was checked</h3>
+            <p>Pull requests run tests plus at least one additional quality gate.</p>
+
+
+          </div>
+          <div>
+            <h3>Evidence</h3>
+            <ul class="evidence-list"><li><code>.github/workflows/ci.yml</code> — Runs on pull_request</li><li><code>.github/workflows/codeql.yml</code> — Runs on pull_request</li><li>Test gate detected</li><li>Additional quality gate detected</li></ul>
+            <div>
+        <h3>Next action</h3>
+        <p>Run tests and lint, build, typecheck, or security checks for pull requests.</p>
+      </div>
+          </div>
+        </div>
+      </details>
+    </article>
+    <article
+      class="finding"
+      data-finding
+      data-domain="automation"
+      data-status="pass"
+      data-severity="low"
+      data-search="automation/job-timeout Job timeouts Workflow jobs have explicit timeout limits. pass low Set timeout-minutes on every workflow job to bound stalled runs.  5 of 5 job(s) declare timeout-minutes"
+    >
+      <details id="check-automation-job-timeout-8">
+        <summary>
+          <span class="status-mark status-pass" aria-hidden="true">✓</span>
+          <span class="finding-heading">
+            <strong>Job timeouts</strong>
+            <span class="finding-meta">
+              <span>Automation</span>
+              <span class="severity">Low severity</span>
+              <span>Pass</span>
+              <span>automation/job-timeout</span>
+            </span>
+          </span>
+        </summary>
+        <div class="finding-body">
+          <div>
+            <h3>What was checked</h3>
+            <p>Workflow jobs have explicit timeout limits.</p>
+
+
+          </div>
+          <div>
+            <h3>Evidence</h3>
+            <ul class="evidence-list"><li>5 of 5 job(s) declare timeout-minutes</li></ul>
+            <div>
+        <h3>Next action</h3>
+        <p>Set timeout-minutes on every workflow job to bound stalled runs.</p>
+      </div>
+          </div>
+        </div>
+      </details>
+    </article>
+    <article
+      class="finding"
+      data-finding
+      data-domain="automation"
+      data-status="not_applicable"
+      data-severity="high"
+      data-search="automation/deploy-safety Deployment safety Detected deployment jobs use an environment and workflow concurrency control. not_applicable high Use a protected environment and concurrency group for every deployment workflow. "
+    >
+      <details id="check-automation-deploy-safety-9">
+        <summary>
+          <span class="status-mark status-skip" aria-hidden="true">–</span>
+          <span class="finding-heading">
+            <strong>Deployment safety</strong>
+            <span class="finding-meta">
+              <span>Automation</span>
+              <span class="severity">High severity</span>
+              <span>Not applicable</span>
+              <span>automation/deploy-safety</span>
+            </span>
+          </span>
+        </summary>
+        <div class="finding-body">
+          <div>
+            <h3>What was checked</h3>
+            <p>Detected deployment jobs use an environment and workflow concurrency control.</p>
+
+
+          </div>
+          <div>
+            <h3>Evidence</h3>
+            <p>No repository evidence was recorded for this check.</p>
+            <div>
+        <h3>Next action</h3>
+        <p>Use a protected environment and concurrency group for every deployment workflow.</p>
+      </div>
+          </div>
+        </div>
+      </details>
+    </article>
+    <article
+      class="finding"
+      data-finding
+      data-domain="security"
+      data-status="pass"
+      data-severity="medium"
+      data-search="security/policy-present Security policy The repository publishes a responsible vulnerability reporting route. pass medium Add SECURITY.md with supported versions and a private reporting channel.  SECURITY.md — Security policy detected"
+    >
+      <details id="check-security-policy-present-10">
+        <summary>
+          <span class="status-mark status-pass" aria-hidden="true">✓</span>
+          <span class="finding-heading">
+            <strong>Security policy</strong>
+            <span class="finding-meta">
+              <span>Security</span>
+              <span class="severity">Medium severity</span>
+              <span>Pass</span>
+              <span>security/policy-present</span>
+            </span>
+          </span>
+        </summary>
+        <div class="finding-body">
+          <div>
+            <h3>What was checked</h3>
+            <p>The repository publishes a responsible vulnerability reporting route.</p>
+
+
+          </div>
+          <div>
+            <h3>Evidence</h3>
+            <ul class="evidence-list"><li><code>SECURITY.md</code> — Security policy detected</li></ul>
+            <div>
+        <h3>Next action</h3>
+        <p>Add SECURITY.md with supported versions and a private reporting channel.</p>
+      </div>
+          </div>
+        </div>
+      </details>
+    </article>
+    <article
+      class="finding"
+      data-finding
+      data-domain="security"
+      data-status="pass"
+      data-severity="high"
+      data-search="security/lockfile-present Dependency lockfile Dependency-bearing projects commit a recognized lockfile. pass high Generate and commit the ecosystem&#39;s lockfile.  package-lock.json — Lockfile detected"
+    >
+      <details id="check-security-lockfile-present-11">
+        <summary>
+          <span class="status-mark status-pass" aria-hidden="true">✓</span>
+          <span class="finding-heading">
+            <strong>Dependency lockfile</strong>
+            <span class="finding-meta">
+              <span>Security</span>
+              <span class="severity">High severity</span>
+              <span>Pass</span>
+              <span>security/lockfile-present</span>
+            </span>
+          </span>
+        </summary>
+        <div class="finding-body">
+          <div>
+            <h3>What was checked</h3>
+            <p>Dependency-bearing projects commit a recognized lockfile.</p>
+
+
+          </div>
+          <div>
+            <h3>Evidence</h3>
+            <ul class="evidence-list"><li><code>package-lock.json</code> — Lockfile detected</li></ul>
+            <div>
+        <h3>Next action</h3>
+        <p>Generate and commit the ecosystem&#39;s lockfile.</p>
+      </div>
+          </div>
+        </div>
+      </details>
+    </article>
+    <article
+      class="finding"
+      data-finding
+      data-domain="security"
+      data-status="pass"
+      data-severity="medium"
+      data-search="security/dependency-updates Dependency update automation A dependency update service is configured for repositories with manifests. pass medium Configure Dependabot or Renovate for the detected package ecosystems.  .github/dependabot.yml — Update automation"
+    >
+      <details id="check-security-dependency-updates-12">
+        <summary>
+          <span class="status-mark status-pass" aria-hidden="true">✓</span>
+          <span class="finding-heading">
+            <strong>Dependency update automation</strong>
+            <span class="finding-meta">
+              <span>Security</span>
+              <span class="severity">Medium severity</span>
+              <span>Pass</span>
+              <span>security/dependency-updates</span>
+            </span>
+          </span>
+        </summary>
+        <div class="finding-body">
+          <div>
+            <h3>What was checked</h3>
+            <p>A dependency update service is configured for repositories with manifests.</p>
+
+
+          </div>
+          <div>
+            <h3>Evidence</h3>
+            <ul class="evidence-list"><li><code>.github/dependabot.yml</code> — Update automation</li></ul>
+            <div>
+        <h3>Next action</h3>
+        <p>Configure Dependabot or Renovate for the detected package ecosystems.</p>
+      </div>
+          </div>
+        </div>
+      </details>
+    </article>
+    <article
+      class="finding"
+      data-finding
+      data-domain="security"
+      data-status="pass"
+      data-severity="high"
+      data-search="security/workflow-permissions Workflow token permissions Workflows explicitly scope the GITHUB_TOKEN and avoid write-all access. pass high Declare only the permissions each workflow or job requires.  0 workflow(s) rely on defaults"
+    >
+      <details id="check-security-workflow-permissions-13">
+        <summary>
+          <span class="status-mark status-pass" aria-hidden="true">✓</span>
+          <span class="finding-heading">
+            <strong>Workflow token permissions</strong>
+            <span class="finding-meta">
+              <span>Security</span>
+              <span class="severity">High severity</span>
+              <span>Pass</span>
+              <span>security/workflow-permissions</span>
+            </span>
+          </span>
+        </summary>
+        <div class="finding-body">
+          <div>
+            <h3>What was checked</h3>
+            <p>Workflows explicitly scope the GITHUB_TOKEN and avoid write-all access.</p>
+            <p><a href="https://docs.github.com/en/actions/reference/security/secure-use" target="_blank" rel="noreferrer noopener">Read the check documentation</a></p>
+
+          </div>
+          <div>
+            <h3>Evidence</h3>
+            <ul class="evidence-list"><li>0 workflow(s) rely on defaults</li></ul>
+            <div>
+        <h3>Next action</h3>
+        <p>Declare only the permissions each workflow or job requires.</p>
+      </div>
+          </div>
+        </div>
+      </details>
+    </article>
+    <article
+      class="finding"
+      data-finding
+      data-domain="security"
+      data-status="pass"
+      data-severity="high"
+      data-search="security/action-reference-pinned Immutable Action references External Actions and containers are pinned to immutable commit or digest references. pass high Pin third-party Actions to a full 40-character commit SHA and containers to a digest.  .github/workflows/ci.yml — Immutable reference .github/workflows/ci.yml — Immutable reference .github/workflows/codeql.yml — Immutable reference .github/workflows/codeql.yml — Immutable reference .github/workflows/codeql.yml — Immutable reference .github/workflows/dogfood.yml — Immutable reference .github/workflows/dogfood.yml — Immutable reference .github/workflows/dogfood.yml — Immutable reference .github/workflows/pages.yml — Immutable reference .github/workflows/pages.yml — Immutable reference .github/workflows/pages.yml — Immutable reference .github/workflows/pages.yml — Immutable reference .github/workflows/pages.yml — Immutable reference"
+    >
+      <details id="check-security-action-reference-pinned-14">
+        <summary>
+          <span class="status-mark status-pass" aria-hidden="true">✓</span>
+          <span class="finding-heading">
+            <strong>Immutable Action references</strong>
+            <span class="finding-meta">
+              <span>Security</span>
+              <span class="severity">High severity</span>
+              <span>Pass</span>
+              <span>security/action-reference-pinned</span>
+            </span>
+          </span>
+        </summary>
+        <div class="finding-body">
+          <div>
+            <h3>What was checked</h3>
+            <p>External Actions and containers are pinned to immutable commit or digest references.</p>
+            <p><a href="https://docs.github.com/en/actions/reference/security/secure-use" target="_blank" rel="noreferrer noopener">Read the check documentation</a></p>
+
+          </div>
+          <div>
+            <h3>Evidence</h3>
+            <ul class="evidence-list"><li><code>.github/workflows/ci.yml</code> — Immutable reference</li><li><code>.github/workflows/ci.yml</code> — Immutable reference</li><li><code>.github/workflows/codeql.yml</code> — Immutable reference</li><li><code>.github/workflows/codeql.yml</code> — Immutable reference</li><li><code>.github/workflows/codeql.yml</code> — Immutable reference</li><li><code>.github/workflows/dogfood.yml</code> — Immutable reference</li><li><code>.github/workflows/dogfood.yml</code> — Immutable reference</li><li><code>.github/workflows/dogfood.yml</code> — Immutable reference</li><li><code>.github/workflows/pages.yml</code> — Immutable reference</li><li><code>.github/workflows/pages.yml</code> — Immutable reference</li><li><code>.github/workflows/pages.yml</code> — Immutable reference</li><li><code>.github/workflows/pages.yml</code> — Immutable reference</li><li><code>.github/workflows/pages.yml</code> — Immutable reference</li></ul>
+            <div>
+        <h3>Next action</h3>
+        <p>Pin third-party Actions to a full 40-character commit SHA and containers to a digest.</p>
+      </div>
+          </div>
+        </div>
+      </details>
+    </article>
+    <article
+      class="finding"
+      data-finding
+      data-domain="security"
+      data-status="pass"
+      data-severity="high"
+      data-search="security/pull-request-target-checkout Privileged pull request checkout pull_request_target workflows do not combine privileged context with a source checkout. pass high Use pull_request for untrusted code, or avoid checking out pull request code in privileged jobs.  No pull_request_target checkout combination detected"
+    >
+      <details id="check-security-pull-request-target-checkout-15">
+        <summary>
+          <span class="status-mark status-pass" aria-hidden="true">✓</span>
+          <span class="finding-heading">
+            <strong>Privileged pull request checkout</strong>
+            <span class="finding-meta">
+              <span>Security</span>
+              <span class="severity">High severity</span>
+              <span>Pass</span>
+              <span>security/pull-request-target-checkout</span>
+            </span>
+          </span>
+        </summary>
+        <div class="finding-body">
+          <div>
+            <h3>What was checked</h3>
+            <p>pull_request_target workflows do not combine privileged context with a source checkout.</p>
+            <p><a href="https://docs.github.com/en/actions/reference/security/secure-use" target="_blank" rel="noreferrer noopener">Read the check documentation</a></p>
+
+          </div>
+          <div>
+            <h3>Evidence</h3>
+            <ul class="evidence-list"><li>No pull_request_target checkout combination detected</li></ul>
+            <div>
+        <h3>Next action</h3>
+        <p>Use pull_request for untrusted code, or avoid checking out pull request code in privileged jobs.</p>
+      </div>
+          </div>
+        </div>
+      </details>
+    </article>
+    <article
+      class="finding"
+      data-finding
+      data-domain="security"
+      data-status="pass"
+      data-severity="high"
+      data-search="security/untrusted-context-in-run Untrusted context in shell Inline shell scripts do not interpolate attacker-controlled GitHub context directly. pass high Pass untrusted values through an environment variable and quote them in the shell.  No direct untrusted shell interpolation detected"
+    >
+      <details id="check-security-untrusted-context-in-run-16">
+        <summary>
+          <span class="status-mark status-pass" aria-hidden="true">✓</span>
+          <span class="finding-heading">
+            <strong>Untrusted context in shell</strong>
+            <span class="finding-meta">
+              <span>Security</span>
+              <span class="severity">High severity</span>
+              <span>Pass</span>
+              <span>security/untrusted-context-in-run</span>
+            </span>
+          </span>
+        </summary>
+        <div class="finding-body">
+          <div>
+            <h3>What was checked</h3>
+            <p>Inline shell scripts do not interpolate attacker-controlled GitHub context directly.</p>
+            <p><a href="https://docs.github.com/en/actions/concepts/security/script-injections" target="_blank" rel="noreferrer noopener">Read the check documentation</a></p>
+
+          </div>
+          <div>
+            <h3>Evidence</h3>
+            <ul class="evidence-list"><li>No direct untrusted shell interpolation detected</li></ul>
+            <div>
+        <h3>Next action</h3>
+        <p>Pass untrusted values through an environment variable and quote them in the shell.</p>
+      </div>
+          </div>
+        </div>
+      </details>
+    </article>
+    <article
+      class="finding"
+      data-finding
+      data-domain="security"
+      data-status="pass"
+      data-severity="high"
+      data-search="security/sensitive-filename Sensitive filenames The checkout does not contain common private-key, credential, secret, or environment filenames. pass high Remove sensitive files from version control, rotate exposed credentials, and add safe ignore rules.  No common sensitive filenames were detected"
+    >
+      <details id="check-security-sensitive-filename-17">
+        <summary>
+          <span class="status-mark status-pass" aria-hidden="true">✓</span>
+          <span class="finding-heading">
+            <strong>Sensitive filenames</strong>
+            <span class="finding-meta">
+              <span>Security</span>
+              <span class="severity">High severity</span>
+              <span>Pass</span>
+              <span>security/sensitive-filename</span>
+            </span>
+          </span>
+        </summary>
+        <div class="finding-body">
+          <div>
+            <h3>What was checked</h3>
+            <p>The checkout does not contain common private-key, credential, secret, or environment filenames.</p>
+
+
+          </div>
+          <div>
+            <h3>Evidence</h3>
+            <ul class="evidence-list"><li>No common sensitive filenames were detected</li></ul>
+            <div>
+        <h3>Next action</h3>
+        <p>Remove sensitive files from version control, rotate exposed credentials, and add safe ignore rules.</p>
+      </div>
+          </div>
+        </div>
+      </details>
+    </article>
+    <article
+      class="finding"
+      data-finding
+      data-domain="community"
+      data-status="pass"
+      data-severity="medium"
+      data-search="community/readme README The repository explains its purpose and basic use. pass medium Add a concise README with purpose, setup, use, and support information.  README.md — README detected"
+    >
+      <details id="check-community-readme-18">
+        <summary>
+          <span class="status-mark status-pass" aria-hidden="true">✓</span>
+          <span class="finding-heading">
+            <strong>README</strong>
+            <span class="finding-meta">
+              <span>Community</span>
+              <span class="severity">Medium severity</span>
+              <span>Pass</span>
+              <span>community/readme</span>
+            </span>
+          </span>
+        </summary>
+        <div class="finding-body">
+          <div>
+            <h3>What was checked</h3>
+            <p>The repository explains its purpose and basic use.</p>
+
+
+          </div>
+          <div>
+            <h3>Evidence</h3>
+            <ul class="evidence-list"><li><code>README.md</code> — README detected</li></ul>
+            <div>
+        <h3>Next action</h3>
+        <p>Add a concise README with purpose, setup, use, and support information.</p>
+      </div>
+          </div>
+        </div>
+      </details>
+    </article>
+    <article
+      class="finding"
+      data-finding
+      data-domain="community"
+      data-status="pass"
+      data-severity="high"
+      data-search="community/license License The repository declares how others may use and contribute to the project. pass high Add an OSI-approved license file appropriate for the project.  LICENSE — License detected"
+    >
+      <details id="check-community-license-19">
+        <summary>
+          <span class="status-mark status-pass" aria-hidden="true">✓</span>
+          <span class="finding-heading">
+            <strong>License</strong>
+            <span class="finding-meta">
+              <span>Community</span>
+              <span class="severity">High severity</span>
+              <span>Pass</span>
+              <span>community/license</span>
+            </span>
+          </span>
+        </summary>
+        <div class="finding-body">
+          <div>
+            <h3>What was checked</h3>
+            <p>The repository declares how others may use and contribute to the project.</p>
+
+
+          </div>
+          <div>
+            <h3>Evidence</h3>
+            <ul class="evidence-list"><li><code>LICENSE</code> — License detected</li></ul>
+            <div>
+        <h3>Next action</h3>
+        <p>Add an OSI-approved license file appropriate for the project.</p>
+      </div>
+          </div>
+        </div>
+      </details>
+    </article>
+    <article
+      class="finding"
+      data-finding
+      data-domain="community"
+      data-status="pass"
+      data-severity="low"
+      data-search="community/contributing Contribution guide Contributors have a documented development and review path. pass low Add CONTRIBUTING.md with setup, test, and pull request expectations.  CONTRIBUTING.md — Contribution guide detected"
+    >
+      <details id="check-community-contributing-20">
+        <summary>
+          <span class="status-mark status-pass" aria-hidden="true">✓</span>
+          <span class="finding-heading">
+            <strong>Contribution guide</strong>
+            <span class="finding-meta">
+              <span>Community</span>
+              <span class="severity">Low severity</span>
+              <span>Pass</span>
+              <span>community/contributing</span>
+            </span>
+          </span>
+        </summary>
+        <div class="finding-body">
+          <div>
+            <h3>What was checked</h3>
+            <p>Contributors have a documented development and review path.</p>
+
+
+          </div>
+          <div>
+            <h3>Evidence</h3>
+            <ul class="evidence-list"><li><code>CONTRIBUTING.md</code> — Contribution guide detected</li></ul>
+            <div>
+        <h3>Next action</h3>
+        <p>Add CONTRIBUTING.md with setup, test, and pull request expectations.</p>
+      </div>
+          </div>
+        </div>
+      </details>
+    </article>
+    <article
+      class="finding"
+      data-finding
+      data-domain="community"
+      data-status="pass"
+      data-severity="low"
+      data-search="community/code-of-conduct Code of conduct The repository defines expected community behavior. pass low Add a recognized code of conduct and enforcement contact.  CODE_OF_CONDUCT.md — Code of conduct detected"
+    >
+      <details id="check-community-code-of-conduct-21">
+        <summary>
+          <span class="status-mark status-pass" aria-hidden="true">✓</span>
+          <span class="finding-heading">
+            <strong>Code of conduct</strong>
+            <span class="finding-meta">
+              <span>Community</span>
+              <span class="severity">Low severity</span>
+              <span>Pass</span>
+              <span>community/code-of-conduct</span>
+            </span>
+          </span>
+        </summary>
+        <div class="finding-body">
+          <div>
+            <h3>What was checked</h3>
+            <p>The repository defines expected community behavior.</p>
+
+
+          </div>
+          <div>
+            <h3>Evidence</h3>
+            <ul class="evidence-list"><li><code>CODE_OF_CONDUCT.md</code> — Code of conduct detected</li></ul>
+            <div>
+        <h3>Next action</h3>
+        <p>Add a recognized code of conduct and enforcement contact.</p>
+      </div>
+          </div>
+        </div>
+      </details>
+    </article>
+    <article
+      class="finding"
+      data-finding
+      data-domain="community"
+      data-status="pass"
+      data-severity="low"
+      data-search="community/issue-template Issue template Issue forms or templates collect useful problem context. pass low Add focused issue forms under .github/ISSUE_TEMPLATE/.  .github/ISSUE_TEMPLATE/bug_report.yml — Issue template .github/ISSUE_TEMPLATE/feature_request.yml — Issue template .github/ISSUE_TEMPLATE/rule_proposal.yml — Issue template .github/ISSUE_TEMPLATE/support_question.yml — Issue template"
+    >
+      <details id="check-community-issue-template-22">
+        <summary>
+          <span class="status-mark status-pass" aria-hidden="true">✓</span>
+          <span class="finding-heading">
+            <strong>Issue template</strong>
+            <span class="finding-meta">
+              <span>Community</span>
+              <span class="severity">Low severity</span>
+              <span>Pass</span>
+              <span>community/issue-template</span>
+            </span>
+          </span>
+        </summary>
+        <div class="finding-body">
+          <div>
+            <h3>What was checked</h3>
+            <p>Issue forms or templates collect useful problem context.</p>
+
+
+          </div>
+          <div>
+            <h3>Evidence</h3>
+            <ul class="evidence-list"><li><code>.github/ISSUE_TEMPLATE/bug_report.yml</code> — Issue template</li><li><code>.github/ISSUE_TEMPLATE/feature_request.yml</code> — Issue template</li><li><code>.github/ISSUE_TEMPLATE/rule_proposal.yml</code> — Issue template</li><li><code>.github/ISSUE_TEMPLATE/support_question.yml</code> — Issue template</li></ul>
+            <div>
+        <h3>Next action</h3>
+        <p>Add focused issue forms under .github/ISSUE_TEMPLATE/.</p>
+      </div>
+          </div>
+        </div>
+      </details>
+    </article>
+    <article
+      class="finding"
+      data-finding
+      data-domain="community"
+      data-status="pass"
+      data-severity="low"
+      data-search="community/pull-request-template Pull request template Pull requests prompt contributors for validation and context. pass low Add a pull request template with summary, validation, and risk prompts.  .github/pull_request_template.md — Pull request template"
+    >
+      <details id="check-community-pull-request-template-23">
+        <summary>
+          <span class="status-mark status-pass" aria-hidden="true">✓</span>
+          <span class="finding-heading">
+            <strong>Pull request template</strong>
+            <span class="finding-meta">
+              <span>Community</span>
+              <span class="severity">Low severity</span>
+              <span>Pass</span>
+              <span>community/pull-request-template</span>
+            </span>
+          </span>
+        </summary>
+        <div class="finding-body">
+          <div>
+            <h3>What was checked</h3>
+            <p>Pull requests prompt contributors for validation and context.</p>
+
+
+          </div>
+          <div>
+            <h3>Evidence</h3>
+            <ul class="evidence-list"><li><code>.github/pull_request_template.md</code> — Pull request template</li></ul>
+            <div>
+        <h3>Next action</h3>
+        <p>Add a pull request template with summary, validation, and risk prompts.</p>
+      </div>
+          </div>
+        </div>
+      </details>
+    </article>
+    <article
+      class="finding"
+      data-finding
+      data-domain="community"
+      data-status="pass"
+      data-severity="medium"
+      data-search="community/support-channel Support channel Users can find an appropriate public or private support route. pass medium Add SUPPORT.md and direct sensitive reports to a private channel.  SUPPORT.md — Support route detected"
+    >
+      <details id="check-community-support-channel-24">
+        <summary>
+          <span class="status-mark status-pass" aria-hidden="true">✓</span>
+          <span class="finding-heading">
+            <strong>Support channel</strong>
+            <span class="finding-meta">
+              <span>Community</span>
+              <span class="severity">Medium severity</span>
+              <span>Pass</span>
+              <span>community/support-channel</span>
+            </span>
+          </span>
+        </summary>
+        <div class="finding-body">
+          <div>
+            <h3>What was checked</h3>
+            <p>Users can find an appropriate public or private support route.</p>
+
+
+          </div>
+          <div>
+            <h3>Evidence</h3>
+            <ul class="evidence-list"><li><code>SUPPORT.md</code> — Support route detected</li></ul>
+            <div>
+        <h3>Next action</h3>
+        <p>Add SUPPORT.md and direct sensitive reports to a private channel.</p>
+      </div>
+          </div>
+        </div>
+      </details>
+    </article>
+    <article
+      class="finding"
+      data-finding
+      data-domain="community"
+      data-status="unknown"
+      data-severity="low"
+      data-search="community/repository-metadata Repository metadata The GitHub repository has a description and useful topics. unknown low Set a concise repository description and relevant topics on GitHub.  GitHub metadata was not available"
+    >
+      <details id="check-community-repository-metadata-25">
+        <summary>
+          <span class="status-mark status-unknown" aria-hidden="true">–</span>
+          <span class="finding-heading">
+            <strong>Repository metadata</strong>
+            <span class="finding-meta">
+              <span>Community</span>
+              <span class="severity">Low severity</span>
+              <span>Unknown</span>
+              <span>community/repository-metadata</span>
+            </span>
+          </span>
+        </summary>
+        <div class="finding-body">
+          <div>
+            <h3>What was checked</h3>
+            <p>The GitHub repository has a description and useful topics.</p>
+
+
+          </div>
+          <div>
+            <h3>Evidence</h3>
+            <ul class="evidence-list"><li>GitHub metadata was not available</li></ul>
+            <div>
+        <h3>Next action</h3>
+        <p>Set a concise repository description and relevant topics on GitHub.</p>
+      </div>
+          </div>
+        </div>
+      </details>
+    </article>
+      </div>
+      <p class="empty-state" id="empty-state" hidden>No checks match these filters. Reset the filters or broaden the search.</p>
+    </section>
+    <footer class="report-footer">
+      <span>Maniflight 0.1.0 · schema 1.0</span>
+      <span>Deterministic timestamp omitted</span>
+    </footer>
+  </main>
+  <script>
+(() => {
+  "use strict";
+
+  const root = document.documentElement;
+  const findings = Array.from(document.querySelectorAll("[data-finding]"));
+  const domainButtons = Array.from(document.querySelectorAll("[data-domain-filter]"));
+  const orbitLines = Array.from(document.querySelectorAll("[data-orbit-domain]"));
+  const domainSelect = document.querySelector("#domain-filter");
+  const statusSelect = document.querySelector("#status-filter");
+  const severitySelect = document.querySelector("#severity-filter");
+  const searchInput = document.querySelector("#finding-search");
+  const clearButton = document.querySelector("#clear-filters");
+  const resultCount = document.querySelector("#result-count");
+  const emptyState = document.querySelector("#empty-state");
+  const themeButton = document.querySelector("#theme-toggle");
+  const priorityLinks = Array.from(document.querySelectorAll('.priority-links a[href^="#"]'));
+  const themeMedia = window.matchMedia("(prefers-color-scheme: light)");
+
+  const normalize = (value) => String(value || "").trim().toLocaleLowerCase();
+
+  function currentTheme() {
+    const explicit = root.getAttribute("data-theme");
+    if (explicit === "light" || explicit === "dark") return explicit;
+    return themeMedia.matches ? "light" : "dark";
+  }
+
+  function storedTheme() {
+    try {
+      const value = window.localStorage.getItem("maniflight-theme");
+      return value === "light" || value === "dark" ? value : null;
+    } catch {
+      return null;
+    }
+  }
+
+  function storeTheme(value) {
+    try {
+      window.localStorage.setItem("maniflight-theme", value);
+    } catch {
+      // Storage can be unavailable for local files or privacy-restricted tabs.
+    }
+  }
+
+  function updateThemeButton() {
+    if (!themeButton) return;
+    const theme = currentTheme();
+    const next = theme === "dark" ? "light" : "dark";
+    const visibleLabel = (theme === "light" ? "Light" : "Dark") + " theme";
+    themeButton.textContent = visibleLabel;
+    themeButton.setAttribute("aria-label", visibleLabel + "; switch to " + next + " theme");
+  }
+
+  const initialTheme = storedTheme();
+  if (initialTheme) root.setAttribute("data-theme", initialTheme);
+  updateThemeButton();
+
+  if (themeButton) {
+    themeButton.addEventListener("click", () => {
+      const next = currentTheme() === "dark" ? "light" : "dark";
+      root.setAttribute("data-theme", next);
+      storeTheme(next);
+      updateThemeButton();
+    });
+  }
+
+  themeMedia.addEventListener?.("change", () => {
+    if (!root.hasAttribute("data-theme")) updateThemeButton();
+  });
+
+  function openFinding(fragment) {
+    try {
+      const target = document.getElementById(decodeURIComponent(fragment.replace(/^#/, "")));
+      if (target instanceof HTMLDetailsElement) {
+        const finding = target.closest("[data-finding]");
+        if (finding?.hidden) {
+          resetFilterValues();
+          applyFilters();
+        }
+        target.open = true;
+        const summary = target.querySelector("summary");
+        if (summary instanceof HTMLElement) summary.focus();
+      }
+    } catch {
+      // Ignore malformed URL fragments; the report remains fully navigable without them.
+    }
+  }
+
+  function openLinkedFinding() {
+    if (window.location.hash) openFinding(window.location.hash);
+  }
+
+  window.addEventListener("hashchange", openLinkedFinding);
+  priorityLinks.forEach((link) => {
+    link.addEventListener("click", () => openFinding(link.getAttribute("href") || ""));
+  });
+  openLinkedFinding();
+
+  function filterState() {
+    return {
+      domain: domainSelect ? domainSelect.value : "all",
+      status: statusSelect ? statusSelect.value : "all",
+      severity: severitySelect ? severitySelect.value : "all",
+      query: searchInput ? normalize(searchInput.value) : "",
+    };
+  }
+
+  function updateVisualControls(domain) {
+    domainButtons.forEach((button) => {
+      const selected = button.getAttribute("data-domain-filter") === domain;
+      button.setAttribute("aria-pressed", String(selected));
+    });
+
+    orbitLines.forEach((line) => {
+      line.setAttribute(
+        "data-active",
+        String(domain !== "all" && line.getAttribute("data-orbit-domain") === domain),
+      );
+    });
+  }
+
+  function applyFilters() {
+    const state = filterState();
+    let visible = 0;
+
+    findings.forEach((finding) => {
+      const matchesDomain = state.domain === "all" || finding.dataset.domain === state.domain;
+      const matchesStatus = state.status === "all" || finding.dataset.status === state.status;
+      const matchesSeverity =
+        state.severity === "all" || finding.dataset.severity === state.severity;
+      const matchesQuery = !state.query || normalize(finding.dataset.search).includes(state.query);
+      const matches = matchesDomain && matchesStatus && matchesSeverity && matchesQuery;
+
+      finding.hidden = !matches;
+      if (matches) visible += 1;
+    });
+
+    updateVisualControls(state.domain);
+
+    if (emptyState) emptyState.hidden = visible !== 0;
+    if (resultCount) {
+      const suffix = visible === 1 ? " check shown" : " checks shown";
+      resultCount.textContent = String(visible) + suffix;
+    }
+  }
+
+  function resetFilterValues() {
+    if (domainSelect) domainSelect.value = "all";
+    if (statusSelect) statusSelect.value = "all";
+    if (severitySelect) severitySelect.value = "all";
+    if (searchInput) searchInput.value = "";
+  }
+
+  domainButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      if (!domainSelect) return;
+      domainSelect.value = button.getAttribute("data-domain-filter") || "all";
+      applyFilters();
+    });
+  });
+
+  domainSelect?.addEventListener("change", applyFilters);
+  statusSelect?.addEventListener("change", applyFilters);
+  severitySelect?.addEventListener("change", applyFilters);
+  searchInput?.addEventListener("input", applyFilters);
+
+  clearButton?.addEventListener("click", () => {
+    resetFilterValues();
+    applyFilters();
+    searchInput?.focus();
+  });
+
+  applyFilters();
+})();
+</script>
+</body>
+</html>

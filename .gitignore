@@ -1,0 +1,13 @@
+node_modules/
+coverage/
+.DS_Store
+*.log
+.env
+.env.*
+!.env.example
+!tests/fixtures/hostile/.env
+maniflight-report/
+playwright-report/
+test-results/
+.playwright-cli/
+output/

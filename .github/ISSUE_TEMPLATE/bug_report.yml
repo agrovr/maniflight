@@ -1,0 +1,100 @@
+name: Bug report
+description: Report reproducible incorrect behavior in the CLI, Action, rules, scoring, or report.
+title: "[Bug] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping improve Maniflight. Search existing issues first.
+        Remove tokens, private source, usernames, and sensitive paths. Security concerns belong in the private process described in SECURITY.md.
+
+  - type: input
+    id: version
+    attributes:
+      label: Maniflight version
+      description: Provide a release, commit SHA, or branch.
+      placeholder: v0.1.0 or 0123abc
+    validations:
+      required: true
+
+  - type: dropdown
+    id: surface
+    attributes:
+      label: Affected surface
+      options:
+        - CLI
+        - GitHub Action
+        - Rule evaluation
+        - Scoring or confidence
+        - Interactive HTML report
+        - JSON report
+        - Configuration
+        - Documentation
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: What happened?
+      description: State the expected and actual behavior.
+      placeholder: |
+        Expected:
+        Actual:
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Minimal reproduction
+      description: Provide exact steps and the smallest sanitized repository shape that reproduces the problem.
+      placeholder: |
+        1. Create ...
+        2. Run ...
+        3. Open ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: command
+    attributes:
+      label: Command or Action configuration
+      description: Redact tokens and private repository details.
+      render: shell
+    validations:
+      required: false
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      placeholder: |
+        OS:
+        Node.js:
+        npm:
+        Browser, if report-related:
+    validations:
+      required: true
+
+  - type: textarea
+    id: output
+    attributes:
+      label: Sanitized output
+      description: Paste relevant console output or a minimal JSON finding. Do not upload a private report.
+      render: text
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Submission checks
+      options:
+        - label: I searched existing issues and documentation.
+          required: true
+        - label: I removed secrets and private repository data.
+          required: true
+        - label: This is not a security vulnerability.
+          required: true

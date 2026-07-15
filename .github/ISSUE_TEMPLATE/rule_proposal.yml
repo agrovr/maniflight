@@ -1,0 +1,96 @@
+name: Rule proposal
+description: Propose a deterministic repository signal or a change to an existing rule.
+title: "[Rule] "
+body:
+  - type: input
+    id: rule
+    attributes:
+      label: Proposed or existing rule ID
+      description: Use a stable domain-prefixed ID, or name the rule being changed.
+      placeholder: automation/example-rule
+    validations:
+      required: true
+
+  - type: dropdown
+    id: domain
+    attributes:
+      label: Domain
+      options:
+        - Architecture
+        - Automation
+        - Security
+        - Community
+        - Future opt-in readiness pack
+    validations:
+      required: true
+
+  - type: textarea
+    id: user_value
+    attributes:
+      label: User value
+      description: What decision does this evidence help a maintainer make?
+    validations:
+      required: true
+
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Deterministic evidence
+      description: List the exact files, fields, or GitHub metadata the rule would inspect.
+    validations:
+      required: true
+
+  - type: textarea
+    id: outcomes
+    attributes:
+      label: Outcome model
+      description: Define pass, warn, fail, unknown, and not-applicable behavior as relevant.
+      placeholder: |
+        Pass:
+        Warn:
+        Fail:
+        Unknown:
+        Not applicable:
+    validations:
+      required: true
+
+  - type: dropdown
+    id: severity
+    attributes:
+      label: Proposed severity
+      options:
+        - Info
+        - Low
+        - Medium
+        - High
+        - Needs discussion
+    validations:
+      required: true
+
+  - type: textarea
+    id: errors
+    attributes:
+      label: False-positive and false-negative analysis
+      description: Name realistic repository shapes the rule could misclassify.
+    validations:
+      required: true
+
+  - type: textarea
+    id: fixtures
+    attributes:
+      label: Test fixtures
+      description: Describe positive, negative, and ambiguous fixtures that should accompany the rule.
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Rule principles
+      options:
+        - label: The proposed evidence can be collected read-only.
+          required: true
+        - label: The rule does not infer contributor performance or claim certification.
+          required: true
+        - label: I reviewed docs/RULES.md and docs/SCORING.md.
+          required: true

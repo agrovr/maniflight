@@ -1,0 +1,10 @@
+import type { Rule } from "../model.js";
+export declare const readme: Rule;
+export declare const license: Rule;
+export declare const contributing: Rule;
+export declare const codeOfConduct: Rule;
+export declare const issueTemplate: Rule;
+export declare const pullRequestTemplate: Rule;
+export declare const supportChannel: Rule;
+export declare const repositoryMetadata: Rule;
+export declare const communityRules: Rule[];

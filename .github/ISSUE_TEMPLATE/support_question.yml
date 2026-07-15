@@ -1,0 +1,49 @@
+name: Support question
+description: Ask a focused question about documented Maniflight behavior.
+title: "[Question] "
+body:
+  - type: textarea
+    id: goal
+    attributes:
+      label: What are you trying to do?
+      description: Describe the repository workflow and desired result.
+    validations:
+      required: true
+
+  - type: textarea
+    id: tried
+    attributes:
+      label: What have you tried?
+      description: Include the documentation followed and sanitized commands or configuration.
+    validations:
+      required: true
+
+  - type: textarea
+    id: blocker
+    attributes:
+      label: What is blocking you?
+      description: Include the exact rule ID, message, or unexpected report behavior.
+    validations:
+      required: true
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      placeholder: |
+        Maniflight version or commit:
+        OS:
+        Node.js:
+        npm:
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Submission checks
+      options:
+        - label: I searched existing issues and read SUPPORT.md.
+          required: true
+        - label: I removed secrets and private repository data.
+          required: true

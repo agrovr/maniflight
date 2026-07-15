@@ -1,0 +1,591 @@
+{
+  "schemaVersion": "1.0",
+  "tool": {
+    "name": "Maniflight",
+    "version": "0.1.0"
+  },
+  "repository": {
+    "name": "Maniflight",
+    "topics": [],
+    "languages": {}
+  },
+  "domains": {
+    "architecture": {
+      "domain": "architecture",
+      "score": 100,
+      "confidence": 100,
+      "earnedWeight": 12,
+      "evaluatedWeight": 12,
+      "possibleWeight": 12,
+      "checks": [
+        {
+          "ruleId": "architecture/manifest-present",
+          "domain": "architecture",
+          "title": "Project manifest",
+          "description": "A machine-readable project manifest makes the repository reproducible and navigable.",
+          "status": "pass",
+          "severity": "medium",
+          "weight": 3,
+          "evidence": [
+            {
+              "kind": "present",
+              "message": "npm manifest",
+              "path": "package.json"
+            }
+          ],
+          "remediation": "Add the standard manifest for the repository's primary language or build system."
+        },
+        {
+          "ruleId": "architecture/source-boundary",
+          "domain": "architecture",
+          "title": "Source boundary",
+          "description": "Production code is grouped under a recognizable application, package, or source directory.",
+          "status": "pass",
+          "severity": "low",
+          "weight": 2,
+          "evidence": [
+            {
+              "kind": "present",
+              "message": "Recognized source boundary",
+              "path": "src"
+            }
+          ],
+          "remediation": "Group production code under src/, app/, packages/, cmd/, internal/, or lib/."
+        },
+        {
+          "ruleId": "architecture/test-capability",
+          "domain": "architecture",
+          "title": "Test capability",
+          "description": "The repository includes tests and a discoverable way to run them.",
+          "status": "pass",
+          "severity": "medium",
+          "weight": 3,
+          "evidence": [
+            {
+              "kind": "present",
+              "message": "7 test file(s) detected"
+            },
+            {
+              "kind": "present",
+              "message": "A test command or test configuration was detected"
+            }
+          ],
+          "remediation": "Add focused tests and expose a standard test command in the project manifest."
+        },
+        {
+          "ruleId": "architecture/typescript-strict",
+          "domain": "architecture",
+          "title": "TypeScript strictness",
+          "description": "TypeScript repositories explicitly enable strict type checking.",
+          "status": "pass",
+          "severity": "medium",
+          "weight": 2,
+          "evidence": [
+            {
+              "kind": "present",
+              "message": "strict mode is enabled",
+              "path": "tsconfig.json"
+            }
+          ],
+          "remediation": "Add a tsconfig.json and enable compilerOptions.strict.",
+          "documentationUrl": "https://www.typescriptlang.org/tsconfig/#strict"
+        },
+        {
+          "ruleId": "architecture/package-entrypoints",
+          "domain": "architecture",
+          "title": "Package entrypoints",
+          "description": "Declared npm entrypoints resolve to files in the inspected checkout.",
+          "status": "pass",
+          "severity": "medium",
+          "weight": 2,
+          "evidence": [
+            {
+              "kind": "present",
+              "message": "bin.maniflight points to dist/cli.js",
+              "path": "package.json"
+            }
+          ],
+          "remediation": "Correct stale entrypoint paths or ensure required build outputs exist before publishing."
+        }
+      ]
+    },
+    "automation": {
+      "domain": "automation",
+      "score": 100,
+      "confidence": 100,
+      "earnedWeight": 7,
+      "evaluatedWeight": 7,
+      "possibleWeight": 7,
+      "checks": [
+        {
+          "ruleId": "automation/workflow-present",
+          "domain": "automation",
+          "title": "Automation workflow",
+          "description": "At least one readable GitHub Actions workflow is present.",
+          "status": "pass",
+          "severity": "medium",
+          "weight": 3,
+          "evidence": [
+            {
+              "kind": "present",
+              "message": "Readable workflow",
+              "path": ".github/workflows/ci.yml"
+            },
+            {
+              "kind": "present",
+              "message": "Readable workflow",
+              "path": ".github/workflows/codeql.yml"
+            },
+            {
+              "kind": "present",
+              "message": "Readable workflow",
+              "path": ".github/workflows/dogfood.yml"
+            },
+            {
+              "kind": "present",
+              "message": "Readable workflow",
+              "path": ".github/workflows/pages.yml"
+            }
+          ],
+          "remediation": "Add a minimal validation workflow that runs on pull requests."
+        },
+        {
+          "ruleId": "automation/pr-validation",
+          "domain": "automation",
+          "title": "Pull request validation",
+          "description": "Pull requests run tests plus at least one additional quality gate.",
+          "status": "pass",
+          "severity": "high",
+          "weight": 3,
+          "evidence": [
+            {
+              "kind": "present",
+              "message": "Runs on pull_request",
+              "path": ".github/workflows/ci.yml"
+            },
+            {
+              "kind": "present",
+              "message": "Runs on pull_request",
+              "path": ".github/workflows/codeql.yml"
+            },
+            {
+              "kind": "present",
+              "message": "Test gate detected"
+            },
+            {
+              "kind": "present",
+              "message": "Additional quality gate detected"
+            }
+          ],
+          "remediation": "Run tests and lint, build, typecheck, or security checks for pull requests."
+        },
+        {
+          "ruleId": "automation/job-timeout",
+          "domain": "automation",
+          "title": "Job timeouts",
+          "description": "Workflow jobs have explicit timeout limits.",
+          "status": "pass",
+          "severity": "low",
+          "weight": 1,
+          "evidence": [
+            {
+              "kind": "present",
+              "message": "5 of 5 job(s) declare timeout-minutes"
+            }
+          ],
+          "remediation": "Set timeout-minutes on every workflow job to bound stalled runs."
+        },
+        {
+          "ruleId": "automation/deploy-safety",
+          "domain": "automation",
+          "title": "Deployment safety",
+          "description": "Detected deployment jobs use an environment and workflow concurrency control.",
+          "status": "not_applicable",
+          "severity": "high",
+          "weight": 2,
+          "evidence": [],
+          "remediation": "Use a protected environment and concurrency group for every deployment workflow."
+        }
+      ]
+    },
+    "security": {
+      "domain": "security",
+      "score": 100,
+      "confidence": 100,
+      "earnedWeight": 23,
+      "evaluatedWeight": 23,
+      "possibleWeight": 23,
+      "checks": [
+        {
+          "ruleId": "security/policy-present",
+          "domain": "security",
+          "title": "Security policy",
+          "description": "The repository publishes a responsible vulnerability reporting route.",
+          "status": "pass",
+          "severity": "medium",
+          "weight": 2,
+          "evidence": [
+            {
+              "kind": "present",
+              "message": "Security policy detected",
+              "path": "SECURITY.md"
+            }
+          ],
+          "remediation": "Add SECURITY.md with supported versions and a private reporting channel."
+        },
+        {
+          "ruleId": "security/lockfile-present",
+          "domain": "security",
+          "title": "Dependency lockfile",
+          "description": "Dependency-bearing projects commit a recognized lockfile.",
+          "status": "pass",
+          "severity": "high",
+          "weight": 3,
+          "evidence": [
+            {
+              "kind": "present",
+              "message": "Lockfile detected",
+              "path": "package-lock.json"
+            }
+          ],
+          "remediation": "Generate and commit the ecosystem's lockfile."
+        },
+        {
+          "ruleId": "security/dependency-updates",
+          "domain": "security",
+          "title": "Dependency update automation",
+          "description": "A dependency update service is configured for repositories with manifests.",
+          "status": "pass",
+          "severity": "medium",
+          "weight": 2,
+          "evidence": [
+            {
+              "kind": "present",
+              "message": "Update automation",
+              "path": ".github/dependabot.yml"
+            }
+          ],
+          "remediation": "Configure Dependabot or Renovate for the detected package ecosystems."
+        },
+        {
+          "ruleId": "security/workflow-permissions",
+          "domain": "security",
+          "title": "Workflow token permissions",
+          "description": "Workflows explicitly scope the GITHUB_TOKEN and avoid write-all access.",
+          "status": "pass",
+          "severity": "high",
+          "weight": 3,
+          "evidence": [
+            {
+              "kind": "present",
+              "message": "0 workflow(s) rely on defaults"
+            }
+          ],
+          "remediation": "Declare only the permissions each workflow or job requires.",
+          "documentationUrl": "https://docs.github.com/en/actions/reference/security/secure-use"
+        },
+        {
+          "ruleId": "security/action-reference-pinned",
+          "domain": "security",
+          "title": "Immutable Action references",
+          "description": "External Actions and containers are pinned to immutable commit or digest references.",
+          "status": "pass",
+          "severity": "high",
+          "weight": 2,
+          "evidence": [
+            {
+              "kind": "present",
+              "message": "Immutable reference",
+              "path": ".github/workflows/ci.yml"
+            },
+            {
+              "kind": "present",
+              "message": "Immutable reference",
+              "path": ".github/workflows/ci.yml"
+            },
+            {
+              "kind": "present",
+              "message": "Immutable reference",
+              "path": ".github/workflows/codeql.yml"
+            },
+            {
+              "kind": "present",
+              "message": "Immutable reference",
+              "path": ".github/workflows/codeql.yml"
+            },
+            {
+              "kind": "present",
+              "message": "Immutable reference",
+              "path": ".github/workflows/codeql.yml"
+            },
+            {
+              "kind": "present",
+              "message": "Immutable reference",
+              "path": ".github/workflows/dogfood.yml"
+            },
+            {
+              "kind": "present",
+              "message": "Immutable reference",
+              "path": ".github/workflows/dogfood.yml"
+            },
+            {
+              "kind": "present",
+              "message": "Immutable reference",
+              "path": ".github/workflows/dogfood.yml"
+            },
+            {
+              "kind": "present",
+              "message": "Immutable reference",
+              "path": ".github/workflows/pages.yml"
+            },
+            {
+              "kind": "present",
+              "message": "Immutable reference",
+              "path": ".github/workflows/pages.yml"
+            },
+            {
+              "kind": "present",
+              "message": "Immutable reference",
+              "path": ".github/workflows/pages.yml"
+            },
+            {
+              "kind": "present",
+              "message": "Immutable reference",
+              "path": ".github/workflows/pages.yml"
+            },
+            {
+              "kind": "present",
+              "message": "Immutable reference",
+              "path": ".github/workflows/pages.yml"
+            }
+          ],
+          "remediation": "Pin third-party Actions to a full 40-character commit SHA and containers to a digest.",
+          "documentationUrl": "https://docs.github.com/en/actions/reference/security/secure-use"
+        },
+        {
+          "ruleId": "security/pull-request-target-checkout",
+          "domain": "security",
+          "title": "Privileged pull request checkout",
+          "description": "pull_request_target workflows do not combine privileged context with a source checkout.",
+          "status": "pass",
+          "severity": "high",
+          "weight": 4,
+          "evidence": [
+            {
+              "kind": "present",
+              "message": "No pull_request_target checkout combination detected"
+            }
+          ],
+          "remediation": "Use pull_request for untrusted code, or avoid checking out pull request code in privileged jobs.",
+          "documentationUrl": "https://docs.github.com/en/actions/reference/security/secure-use"
+        },
+        {
+          "ruleId": "security/untrusted-context-in-run",
+          "domain": "security",
+          "title": "Untrusted context in shell",
+          "description": "Inline shell scripts do not interpolate attacker-controlled GitHub context directly.",
+          "status": "pass",
+          "severity": "high",
+          "weight": 4,
+          "evidence": [
+            {
+              "kind": "present",
+              "message": "No direct untrusted shell interpolation detected"
+            }
+          ],
+          "remediation": "Pass untrusted values through an environment variable and quote them in the shell.",
+          "documentationUrl": "https://docs.github.com/en/actions/concepts/security/script-injections"
+        },
+        {
+          "ruleId": "security/sensitive-filename",
+          "domain": "security",
+          "title": "Sensitive filenames",
+          "description": "The checkout does not contain common private-key, credential, secret, or environment filenames.",
+          "status": "pass",
+          "severity": "high",
+          "weight": 3,
+          "evidence": [
+            {
+              "kind": "present",
+              "message": "No common sensitive filenames were detected"
+            }
+          ],
+          "remediation": "Remove sensitive files from version control, rotate exposed credentials, and add safe ignore rules."
+        }
+      ]
+    },
+    "community": {
+      "domain": "community",
+      "score": 100,
+      "confidence": 92.3,
+      "earnedWeight": 12,
+      "evaluatedWeight": 12,
+      "possibleWeight": 13,
+      "checks": [
+        {
+          "ruleId": "community/readme",
+          "domain": "community",
+          "title": "README",
+          "description": "The repository explains its purpose and basic use.",
+          "status": "pass",
+          "severity": "medium",
+          "weight": 3,
+          "evidence": [
+            {
+              "kind": "present",
+              "message": "README detected",
+              "path": "README.md"
+            }
+          ],
+          "remediation": "Add a concise README with purpose, setup, use, and support information."
+        },
+        {
+          "ruleId": "community/license",
+          "domain": "community",
+          "title": "License",
+          "description": "The repository declares how others may use and contribute to the project.",
+          "status": "pass",
+          "severity": "high",
+          "weight": 3,
+          "evidence": [
+            {
+              "kind": "present",
+              "message": "License detected",
+              "path": "LICENSE"
+            }
+          ],
+          "remediation": "Add an OSI-approved license file appropriate for the project."
+        },
+        {
+          "ruleId": "community/contributing",
+          "domain": "community",
+          "title": "Contribution guide",
+          "description": "Contributors have a documented development and review path.",
+          "status": "pass",
+          "severity": "low",
+          "weight": 2,
+          "evidence": [
+            {
+              "kind": "present",
+              "message": "Contribution guide detected",
+              "path": "CONTRIBUTING.md"
+            }
+          ],
+          "remediation": "Add CONTRIBUTING.md with setup, test, and pull request expectations."
+        },
+        {
+          "ruleId": "community/code-of-conduct",
+          "domain": "community",
+          "title": "Code of conduct",
+          "description": "The repository defines expected community behavior.",
+          "status": "pass",
+          "severity": "low",
+          "weight": 1,
+          "evidence": [
+            {
+              "kind": "present",
+              "message": "Code of conduct detected",
+              "path": "CODE_OF_CONDUCT.md"
+            }
+          ],
+          "remediation": "Add a recognized code of conduct and enforcement contact."
+        },
+        {
+          "ruleId": "community/issue-template",
+          "domain": "community",
+          "title": "Issue template",
+          "description": "Issue forms or templates collect useful problem context.",
+          "status": "pass",
+          "severity": "low",
+          "weight": 1,
+          "evidence": [
+            {
+              "kind": "present",
+              "message": "Issue template",
+              "path": ".github/ISSUE_TEMPLATE/bug_report.yml"
+            },
+            {
+              "kind": "present",
+              "message": "Issue template",
+              "path": ".github/ISSUE_TEMPLATE/feature_request.yml"
+            },
+            {
+              "kind": "present",
+              "message": "Issue template",
+              "path": ".github/ISSUE_TEMPLATE/rule_proposal.yml"
+            },
+            {
+              "kind": "present",
+              "message": "Issue template",
+              "path": ".github/ISSUE_TEMPLATE/support_question.yml"
+            }
+          ],
+          "remediation": "Add focused issue forms under .github/ISSUE_TEMPLATE/."
+        },
+        {
+          "ruleId": "community/pull-request-template",
+          "domain": "community",
+          "title": "Pull request template",
+          "description": "Pull requests prompt contributors for validation and context.",
+          "status": "pass",
+          "severity": "low",
+          "weight": 1,
+          "evidence": [
+            {
+              "kind": "present",
+              "message": "Pull request template",
+              "path": ".github/pull_request_template.md"
+            }
+          ],
+          "remediation": "Add a pull request template with summary, validation, and risk prompts."
+        },
+        {
+          "ruleId": "community/support-channel",
+          "domain": "community",
+          "title": "Support channel",
+          "description": "Users can find an appropriate public or private support route.",
+          "status": "pass",
+          "severity": "medium",
+          "weight": 1,
+          "evidence": [
+            {
+              "kind": "present",
+              "message": "Support route detected",
+              "path": "SUPPORT.md"
+            }
+          ],
+          "remediation": "Add SUPPORT.md and direct sensitive reports to a private channel."
+        },
+        {
+          "ruleId": "community/repository-metadata",
+          "domain": "community",
+          "title": "Repository metadata",
+          "description": "The GitHub repository has a description and useful topics.",
+          "status": "unknown",
+          "severity": "low",
+          "weight": 1,
+          "evidence": [
+            {
+              "kind": "unknown",
+              "message": "GitHub metadata was not available"
+            }
+          ],
+          "remediation": "Set a concise repository description and relevant topics on GitHub."
+        }
+      ]
+    }
+  },
+  "overall": {
+    "score": 100,
+    "confidence": 98.5,
+    "label": "ready"
+  },
+  "summary": {
+    "pass": 23,
+    "warn": 0,
+    "fail": 0,
+    "unknown": 1,
+    "notApplicable": 1,
+    "highFindings": 0
+  }
+}

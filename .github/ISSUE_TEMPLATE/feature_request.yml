@@ -1,0 +1,74 @@
+name: Feature request
+description: Propose a focused improvement grounded in a real repository workflow.
+title: "[Feature] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Start with the user problem. A concrete workflow and current workaround are more useful than a feature list.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: Who encounters the problem, at what point in a preflight, and what is the consequence?
+    validations:
+      required: true
+
+  - type: textarea
+    id: workaround
+    attributes:
+      label: Current workaround
+      description: Explain how this is handled today and why that is insufficient.
+    validations:
+      required: true
+
+  - type: textarea
+    id: outcome
+    attributes:
+      label: Desired outcome
+      description: Describe observable behavior without prescribing unnecessary implementation details.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: surface
+    attributes:
+      label: Primary surface
+      options:
+        - CLI
+        - GitHub Action
+        - Interactive report
+        - JSON output
+        - Configuration
+        - Documentation
+        - Future readiness pack
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Example and evidence
+      description: Link a public example or provide a sanitized repository shape and expected result.
+    validations:
+      required: false
+
+  - type: textarea
+    id: limits
+    attributes:
+      label: Risks and limits
+      description: Consider false confidence, false positives, privacy, compatibility, runtime, and read-only behavior.
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Submission checks
+      options:
+        - label: I searched existing issues and the roadmap.
+          required: true
+        - label: This request describes a real workflow rather than activity for its own sake.
+          required: true

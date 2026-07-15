@@ -1,0 +1,12 @@
+{
+  "name": "healthy-fixture",
+  "private": true,
+  "exports": "./src/index.ts",
+  "scripts": {
+    "lint": "biome check .",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "typescript": "1.0.0"
+  }
+}
