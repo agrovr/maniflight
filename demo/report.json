@@ -170,6 +170,11 @@
             },
             {
               "kind": "present",
+              "message": "Runs on pull_request",
+              "path": ".github/workflows/dogfood.yml"
+            },
+            {
+              "kind": "present",
               "message": "Test gate detected"
             },
             {
