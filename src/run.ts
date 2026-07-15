@@ -7,8 +7,7 @@ import { loadConfig } from "./config.js";
 import type { CheckResult, GitHubRepositoryMetadata, RunOptions, RunResult } from "./model.js";
 import { buildReport } from "./report/score.js";
 import { evaluateRules } from "./rules/index.js";
-
-const VERSION = "0.1.0";
+import { VERSION } from "./version.js";
 
 function applyWaivers(
   checks: CheckResult[],

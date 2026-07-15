@@ -63,7 +63,7 @@
           "evidence": [
             {
               "kind": "present",
-              "message": "11 test file(s) detected"
+              "message": "10 test file(s) detected"
             },
             {
               "kind": "present",
@@ -167,11 +167,6 @@
               "kind": "present",
               "message": "Runs on pull_request",
               "path": ".github/workflows/codeql.yml"
-            },
-            {
-              "kind": "present",
-              "message": "Runs on pull_request",
-              "path": ".github/workflows/dogfood.yml"
             },
             {
               "kind": "present",

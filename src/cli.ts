@@ -4,16 +4,20 @@ import { resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 import { Command, InvalidArgumentError } from "commander";
 import { evaluateGates } from "./gates.js";
-import { writeReportArtifacts } from "./output.js";
+import { loadBaselineReport, writeReportArtifacts } from "./output.js";
+import { compareReports } from "./report/compare.js";
 import { runManiflight } from "./run.js";
+import { VERSION } from "./version.js";
 
 interface ScanOptions {
   output: string;
   repository?: string;
   config: string;
   offline: boolean;
+  baselineReport?: string;
   failUnder?: number;
   failOnHigh?: boolean;
+  failOnRegression?: boolean;
 }
 
 function scoreValue(value: string): number {
@@ -30,7 +34,7 @@ function displayScore(score: number | null): string {
 
 export async function runCli(arguments_: string[] = process.argv): Promise<void> {
   const program = new Command();
-  program.name("maniflight").description("Evidence-backed repository preflight").version("0.1.0");
+  program.name("maniflight").description("Evidence-backed repository preflight").version(VERSION);
 
   program
     .command("scan")
@@ -40,9 +44,15 @@ export async function runCli(arguments_: string[] = process.argv): Promise<void>
     .option("-r, --repository <owner/name>", "repository used for optional GitHub metadata")
     .option("-c, --config <path>", "configuration path inside the repository", ".maniflight.yml")
     .option("--offline", "skip GitHub API enrichment", false)
+    .option("--baseline-report <path>", "compare against a previous Maniflight report.json")
     .option("--fail-under <score>", "fail below this readiness score", scoreValue)
     .option("--fail-on-high", "fail when an unwaived high-severity finding is present")
+    .option("--fail-on-regression", "fail when the scan regresses from the baseline report")
     .action(async (path: string, options: ScanOptions) => {
+      if (options.failOnRegression && !options.baselineReport) {
+        throw new Error("--fail-on-regression requires --baseline-report");
+      }
+
       const root = resolve(path);
       const repository = options.repository ?? process.env.GITHUB_REPOSITORY;
       const token = process.env.GITHUB_TOKEN;
@@ -53,16 +63,34 @@ export async function runCli(arguments_: string[] = process.argv): Promise<void>
         ...(!options.offline && repository ? { repository } : {}),
         ...(!options.offline && token ? { token } : {}),
       });
-      const artifacts = await writeReportArtifacts(result.report, resolve(options.output));
+      const baseline = options.baselineReport
+        ? await loadBaselineReport(resolve(options.baselineReport))
+        : undefined;
+      const comparison = baseline ? compareReports(result.report, baseline) : undefined;
+      const artifacts = await writeReportArtifacts(
+        result.report,
+        resolve(options.output),
+        undefined,
+        comparison,
+      );
       const failures = evaluateGates(result.report, {
         failUnder: options.failUnder ?? result.config.thresholds.failUnder,
         failOnHigh: options.failOnHigh ?? result.config.thresholds.failOnHigh,
+        failOnRegression: options.failOnRegression ?? false,
+        ...(comparison ? { regressionCount: comparison.summary.regressions } : {}),
       });
 
+      const comparisonLines = comparison
+        ? [
+            `${comparison.summary.regressions} regressions, ${comparison.summary.improvements} improvements from baseline`,
+            `Comparison: ${artifacts.comparison}`,
+          ]
+        : [];
       process.stdout.write(
         `${[
           `Maniflight ${displayScore(result.report.overall.score)} (${result.report.overall.confidence}% confidence)`,
           `${result.report.summary.fail} failed, ${result.report.summary.warn} warning, ${result.report.summary.unknown} unknown`,
+          ...comparisonLines,
           `Report: ${artifacts.html}`,
         ].join("\n")}\n`,
       );

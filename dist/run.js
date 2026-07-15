@@ -6,7 +6,7 @@ import { collectWorkflows } from "./collect/workflows.js";
 import { loadConfig } from "./config.js";
 import { buildReport } from "./report/score.js";
 import { evaluateRules } from "./rules/index.js";
-const VERSION = "0.1.0";
+import { VERSION } from "./version.js";
 function applyWaivers(checks, ignoreRules) {
     return checks.map((check) => {
         const waiver = ignoreRules.find((candidate) => {

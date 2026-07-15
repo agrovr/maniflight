@@ -43,15 +43,19 @@ function safeId(value, index) {
         .slice(0, 72);
     return `check-${normalized || "result"}-${index + 1}`;
 }
+function formatMetricNumber(value) {
+    const rounded = Math.round(value * 10) / 10;
+    return Number.isInteger(rounded) ? String(rounded) : rounded.toFixed(1);
+}
 function clampScore(value) {
     if (value === null || !Number.isFinite(value))
         return null;
-    return Math.max(0, Math.min(100, Math.round(value)));
+    return Math.max(0, Math.min(100, Math.round(value * 10) / 10));
 }
 function confidencePercent(value) {
     if (!Number.isFinite(value))
-        return 0;
-    return Math.round(Math.max(0, Math.min(100, value)));
+        return "0";
+    return formatMetricNumber(Math.max(0, Math.min(100, value)));
 }
 function countLabel(count, singular, plural = `${singular}s`) {
     return `${count} ${count === 1 ? singular : plural}`;
@@ -112,7 +116,7 @@ function renderRepositoryPath(report) {
 }
 function renderSummary(report) {
     const score = clampScore(report.overall.score);
-    const scoreText = score === null ? "Not scored" : `${score}%`;
+    const scoreText = score === null ? "Not scored" : `${formatMetricNumber(score)}%`;
     const scoreProgress = score === null
         ? ""
         : `<progress max="100" value="${score}" aria-label="Overall readiness score: ${score} percent">${score}%</progress>`;
@@ -143,10 +147,121 @@ function renderSummary(report) {
       </div>
     </section>`;
 }
+function comparisonRepositoryLabel(comparison) {
+    const repository = comparison.baseline.repository;
+    return repository.owner ? `${repository.owner}/${repository.name}` : repository.name;
+}
+function renderComparisonCount(count, singular, plural, tone) {
+    return `<li class="comparison-count comparison-count-${tone}"><strong>${count}</strong><span>${count === 1 ? singular : plural}</span></li>`;
+}
+function renderComparisonRule(ruleId, title, domain, severity) {
+    return `<span class="comparison-rule">
+          <code>${escapeHtml(ruleId)}</code>
+          <strong>${escapeHtml(title)}</strong>
+          <span class="comparison-rule-meta">${DOMAIN_LABELS[domain]} · ${SEVERITY_LABELS[severity]} severity</span>
+        </span>`;
+}
+function renderMatchedComparisonChange(change) {
+    return `<li>
+        ${renderComparisonRule(change.ruleId, change.current.title, change.current.domain, change.current.severity)}
+        <span class="comparison-transition">
+          <span class="visually-hidden">Status changed from </span>
+          <span class="comparison-status ${statusClass(change.baseline.status)}">${STATUS_LABELS[change.baseline.status]}</span>
+          <span aria-hidden="true">→</span>
+          <span class="visually-hidden"> to </span>
+          <span class="comparison-status ${statusClass(change.current.status)}">${STATUS_LABELS[change.current.status]}</span>
+        </span>
+      </li>`;
+}
+function renderAddedComparisonChange(change) {
+    return `<li>
+        ${renderComparisonRule(change.ruleId, change.current.title, change.current.domain, change.current.severity)}
+        <span class="comparison-transition"><span class="comparison-context">Current</span> <span class="comparison-status ${statusClass(change.current.status)}">${STATUS_LABELS[change.current.status]}</span></span>
+      </li>`;
+}
+function renderRemovedComparisonChange(change) {
+    return `<li>
+        ${renderComparisonRule(change.ruleId, change.baseline.title, change.baseline.domain, change.baseline.severity)}
+        <span class="comparison-transition"><span class="comparison-context">Baseline</span> <span class="comparison-status ${statusClass(change.baseline.status)}">${STATUS_LABELS[change.baseline.status]}</span></span>
+      </li>`;
+}
+function renderComparisonGroup(id, title, tone, changes, renderChange) {
+    if (changes.length === 0)
+        return "";
+    return `<section class="comparison-group comparison-group-${tone}" aria-labelledby="${id}">
+      <div class="comparison-group-heading">
+        <h3 id="${id}">${title}</h3>
+        <span aria-label="${countLabel(changes.length, "change")}">${changes.length}</span>
+      </div>
+      <ul aria-label="${title}">
+        ${changes.map(renderChange).join("")}
+      </ul>
+    </section>`;
+}
+function renderComparisonMetric(label, current, delta) {
+    const currentValue = current === null || !Number.isFinite(current)
+        ? "Unavailable"
+        : `${formatMetricNumber(current)}%`;
+    let deltaLabel = "Delta unavailable";
+    if (delta !== null && Number.isFinite(delta)) {
+        const rounded = Math.round(delta * 10) / 10;
+        const sign = rounded > 0 ? "+" : rounded < 0 ? "-" : "±";
+        const magnitude = formatMetricNumber(Math.abs(rounded));
+        deltaLabel = `${sign}${magnitude} ${Math.abs(rounded) === 1 ? "point" : "points"} from baseline`;
+    }
+    return `<div>
+        <dt>${label}</dt>
+        <dd><strong>${currentValue}</strong><span class="comparison-delta">${deltaLabel}</span></dd>
+      </div>`;
+}
+function renderComparison(comparison) {
+    if (!comparison)
+        return "";
+    const otherChanges = comparison.improvements.length +
+        comparison.evidenceChanges.length +
+        comparison.added.length +
+        comparison.removed.length;
+    const noRegressionState = comparison.regressions.length === 0
+        ? `<p class="comparison-clear">
+      <span class="comparison-clear-mark" aria-hidden="true">✓</span>
+      <span><strong>No readiness regressions detected.</strong> ${otherChanges === 0
+            ? "No other rule-state changes were detected."
+            : "Improvements and other changes remain listed for review."}</span>
+    </p>`
+        : "";
+    const comparisonGroups = [
+        renderComparisonGroup("comparison-regressions", "Regressions", "regression", comparison.regressions, renderMatchedComparisonChange),
+        renderComparisonGroup("comparison-improvements", "Improvements", "improvement", comparison.improvements, renderMatchedComparisonChange),
+        renderComparisonGroup("comparison-evidence", "Evidence changes", "evidence", comparison.evidenceChanges, renderMatchedComparisonChange),
+        renderComparisonGroup("comparison-added", "Added checks", "added", comparison.added, renderAddedComparisonChange),
+        renderComparisonGroup("comparison-removed", "Removed checks", "removed", comparison.removed, renderRemovedComparisonChange),
+    ].join("");
+    return `
+    <section class="comparison-panel" aria-labelledby="comparison-title">
+      <div class="section-heading comparison-heading">
+        <h2 id="comparison-title">Changes from baseline</h2>
+        <p>Compared with baseline <strong class="comparison-baseline">${escapeHtml(comparisonRepositoryLabel(comparison))}</strong>. Status changes are separated from added and removed checks.</p>
+      </div>
+      <dl class="comparison-metrics" aria-label="Current metrics compared with baseline">
+        ${renderComparisonMetric("Current score", comparison.metrics.score.current, comparison.metrics.score.delta)}
+        ${renderComparisonMetric("Current confidence", comparison.metrics.confidence.current, comparison.metrics.confidence.delta)}
+      </dl>
+      <ul class="comparison-summary" aria-label="Comparison totals">
+        ${renderComparisonCount(comparison.regressions.length, "regression", "regressions", "regression")}
+        ${renderComparisonCount(comparison.improvements.length, "improvement", "improvements", "improvement")}
+        ${renderComparisonCount(comparison.evidenceChanges.length, "evidence change", "evidence changes", "evidence")}
+        ${renderComparisonCount(comparison.added.length, "added check", "added checks", "added")}
+        ${renderComparisonCount(comparison.removed.length, "removed check", "removed checks", "removed")}
+        ${renderComparisonCount(comparison.unchanged.length, "unchanged check", "unchanged checks", "unchanged")}
+      </ul>
+      ${noRegressionState}
+      ${comparisonGroups ? `<div class="comparison-groups">${comparisonGroups}</div>` : ""}
+    </section>`;
+}
 function renderDomainControl(domain, result) {
     const label = DOMAIN_LABELS[domain];
     const score = clampScore(result.score);
-    const scoreText = score === null ? "Not scored" : `${score}%`;
+    const scoreText = score === null ? "Not scored" : `${formatMetricNumber(score)}%`;
     const progress = score === null
         ? ""
         : `<progress max="100" value="${score}" aria-hidden="true">${score}%</progress>`;
@@ -364,7 +479,7 @@ function contentSecurityPolicy(styles, interaction) {
         `style-src 'sha256-${sha256(styles)}'`,
     ].join("; ");
 }
-export function renderReportHtml(report) {
+export function renderReportHtml(report, comparison) {
     const repositoryName = repositoryDisplayName(report);
     const styles = stripTrailingWhitespace(REPORT_STYLES);
     const interaction = stripTrailingWhitespace(REPORT_INTERACTION);
@@ -389,6 +504,7 @@ export function renderReportHtml(report) {
   </header>
   <main class="shell" id="main-content">
     ${renderSummary(report)}
+    ${renderComparison(comparison)}
     ${renderConstellation(report)}
     ${renderFindings(report)}
     <footer class="report-footer">

@@ -19,6 +19,21 @@ The v0.1 scanner reports evidence. It does not modify the target repository,
 apply suggested fixes, rank contributors, or claim that a repository is
 production-ready.
 
+## v0.2 — Baseline-aware regression tracking
+
+The second preview adds a repository-relative trajectory without a hosted
+service:
+
+- compare a current scan with an explicitly supplied earlier `report.json`;
+- classify regressions, improvements, evidence changes, and rule-catalog
+  changes by stable rule ID;
+- write a separate, versioned `comparison.json` artifact;
+- show the delta in the accessible interactive report; and
+- optionally fail CI only for newly introduced regressions.
+
+Maniflight does not download the baseline, check out Git refs, or request
+broader token permissions. Score and confidence deltas remain informational.
+
 ## Near-term candidates
 
 The next milestones will be selected from validated user needs:
@@ -28,12 +43,12 @@ The next milestones will be selected from validated user needs:
 - clearer monorepo and multi-package boundaries;
 - machine-readable output stability and schema versioning;
 - improved source locations and remediation guidance;
-- report comparison between two commits; and
+- history and trend presentation built on explicit comparison artifacts; and
 - accessibility and performance work on large reports.
 
 ## Readiness packs under exploration
 
-These are future, opt-in rule packs—not v0.1 features:
+These are future, opt-in rule packs—not v0.2 features:
 
 - **AI service readiness:** evidence for evaluation coverage, bounded retries
   and timeouts, structured-output handling, human checkpoints, and observable
