@@ -1,4 +1,5 @@
 import { Octokit } from "@octokit/rest";
+import { VERSION } from "../version.js";
 function isRecord(value) {
     return Boolean(value) && typeof value === "object" && !Array.isArray(value);
 }
@@ -46,7 +47,7 @@ export async function collectGitHub(repository, options = {}) {
     const client = options.client ??
         new Octokit({
             ...(options.token ? { auth: options.token } : {}),
-            userAgent: "maniflight/0.1.0",
+            userAgent: `maniflight/${VERSION}`,
             request: {
                 headers: {
                     accept: "application/vnd.github+json",

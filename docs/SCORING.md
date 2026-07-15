@@ -126,10 +126,35 @@ Gating is opt-in:
 - `fail-under` lets a repository owner select an overall-score threshold.
 - `fail-on-high` lets a repository owner fail the step when a high-severity
   finding is reported.
+- `fail-on-regression` lets a repository owner fail only when the current scan
+  regresses from an explicit baseline.
 
 Choose gates only after reviewing the rule catalog and a baseline report.
 Consider score and confidence together. A threshold on a low-confidence scan
 can create false assurance or noisy failures.
+
+## Baseline comparison
+
+Comparison does not change either report's score. It matches checks by stable
+rule ID and classifies status movement separately:
+
+| Baseline → current | Classification | Triggers `fail-on-regression`? |
+| --- | --- | :---: |
+| `pass` → `warn` or `fail` | Regression | Yes |
+| `warn` → `fail` | Regression | Yes |
+| Reverse movement among `fail`, `warn`, and `pass` | Improvement | No |
+| Any transition involving `unknown` or `not_applicable` | Evidence change | No |
+| Added or removed rule ID | Catalog change | No |
+
+Unchanged checks are counted for completeness but omitted from the report's
+focused change lists. Score and confidence deltas are informational because a
+different observation surface can move either number without a true
+regression.
+
+The current scan remains `report.json`; comparison output is stored in a
+separate, versioned `comparison.json`. The baseline must be supplied as a local
+supported Maniflight report. The CLI and Action do not retrieve it
+automatically.
 
 ## Responsible use
 

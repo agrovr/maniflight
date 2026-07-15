@@ -351,6 +351,255 @@ progress::-moz-progress-bar {
   text-wrap: pretty;
 }
 
+.comparison-panel {
+  padding-block: 2rem 2.5rem;
+  border-top: 1px solid var(--line);
+}
+
+.comparison-heading {
+  align-items: start;
+}
+
+.comparison-baseline {
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+
+.comparison-metrics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem 1.5rem;
+  margin: 0 0 1rem;
+  padding-block: 0.65rem;
+  border-block: 1px solid var(--line);
+}
+
+.comparison-metrics > div,
+.comparison-metrics dd {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.55rem;
+  align-items: baseline;
+}
+
+.comparison-metrics dt {
+  color: var(--muted);
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.comparison-metrics dd {
+  margin: 0;
+}
+
+.comparison-metrics strong {
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.comparison-delta {
+  color: var(--quiet);
+  font-size: 0.8rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.comparison-summary {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 0.55rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.comparison-count {
+  min-width: 0;
+  padding: 0.7rem 0.8rem;
+  border-left: 2px solid var(--comparison-accent, var(--line-strong));
+  background: var(--surface);
+}
+
+.comparison-count-regression {
+  --comparison-accent: var(--fail);
+}
+
+.comparison-count-improvement {
+  --comparison-accent: var(--pass);
+}
+
+.comparison-count-evidence {
+  --comparison-accent: var(--lavender);
+}
+
+.comparison-count-added {
+  --comparison-accent: var(--orange);
+}
+
+.comparison-count-removed,
+.comparison-count-unchanged {
+  --comparison-accent: var(--quiet);
+}
+
+.comparison-count strong,
+.comparison-count span {
+  display: block;
+}
+
+.comparison-count strong {
+  color: var(--ink);
+  font-size: 1.25rem;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.1;
+}
+
+.comparison-count span {
+  margin-top: 0.25rem;
+  color: var(--muted);
+  font-size: 0.8rem;
+  line-height: 1.25;
+}
+
+.comparison-clear {
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+  margin: 1rem 0 0;
+  padding: 0.85rem 1rem;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--surface);
+  color: var(--muted);
+}
+
+.comparison-clear strong {
+  color: var(--ink);
+}
+
+.comparison-clear-mark {
+  display: grid;
+  flex: 0 0 auto;
+  place-items: center;
+  width: 1.65rem;
+  height: 1.65rem;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  color: var(--pass);
+  font-size: 0.8rem;
+  font-weight: 800;
+}
+
+.comparison-groups {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.8rem;
+  align-items: start;
+  margin-top: 1rem;
+}
+
+.comparison-group {
+  --comparison-accent: var(--line-strong);
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-top: 2px solid var(--comparison-accent);
+  border-radius: 10px;
+  background: var(--surface);
+}
+
+.comparison-group-regression {
+  --comparison-accent: var(--fail);
+}
+
+.comparison-group-improvement {
+  --comparison-accent: var(--pass);
+}
+
+.comparison-group-evidence {
+  --comparison-accent: var(--lavender);
+}
+
+.comparison-group-added {
+  --comparison-accent: var(--orange);
+}
+
+.comparison-group-removed {
+  --comparison-accent: var(--quiet);
+}
+
+.comparison-group-heading {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: baseline;
+  padding: 0.75rem 0.9rem;
+}
+
+.comparison-group-heading h3 {
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.comparison-group-heading span {
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+}
+
+.comparison-group ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.comparison-group li {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: center;
+  padding: 0.8rem 0.9rem;
+  border-top: 1px solid var(--line);
+}
+
+.comparison-rule {
+  display: grid;
+  min-width: 0;
+  gap: 0.1rem;
+}
+
+.comparison-rule code {
+  color: var(--muted);
+  font-size: 0.75rem;
+  overflow-wrap: anywhere;
+}
+
+.comparison-rule strong {
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+
+.comparison-rule-meta {
+  color: var(--quiet);
+  font-size: 0.8rem;
+}
+
+.comparison-transition {
+  display: inline-flex;
+  flex: 0 0 auto;
+  gap: 0.35rem;
+  align-items: center;
+  color: var(--muted);
+  font-size: 0.8rem;
+  white-space: nowrap;
+}
+
+.comparison-status {
+  font-weight: 750;
+}
+
+.comparison-context {
+  color: var(--quiet);
+}
+
 .constellation-panel {
   padding-block: 2rem 2.5rem;
   border-block: 1px solid var(--line);
@@ -757,6 +1006,14 @@ progress::-moz-progress-bar {
     border-left: 0;
   }
 
+  .comparison-summary {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .comparison-groups {
+    grid-template-columns: 1fr;
+  }
+
   .constellation {
     grid-template-areas:
       "core core"
@@ -815,6 +1072,19 @@ progress::-moz-progress-bar {
 
   .section-heading p {
     margin-top: 0.45rem;
+  }
+
+  .comparison-summary {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .comparison-group li {
+    display: grid;
+    gap: 0.55rem;
+  }
+
+  .comparison-transition {
+    white-space: normal;
   }
 
   .findings-section {
@@ -913,6 +1183,10 @@ progress::-moz-progress-bar {
 
   .finding details:not([open]) > :not(summary) {
     display: block !important;
+  }
+
+  .comparison-group {
+    break-inside: avoid;
   }
 }
 

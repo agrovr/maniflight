@@ -12,7 +12,7 @@ inputs:
     required: false
     default: .
   output-dir:
-    description: Directory where report.html, report.json, and orbit.svg are written.
+    description: Directory for scan artifacts and optional comparison.json output.
     required: false
     default: maniflight-report
   github-token:
@@ -25,11 +25,18 @@ inputs:
     description: Path to a Maniflight YAML configuration file.
     required: false
     default: .maniflight.yml
+  baseline-report:
+    description: Optional path to a previous Maniflight report.json used for regression comparison.
+    required: false
   fail-under:
     description: Optional readiness score threshold that makes the step fail.
     required: false
   fail-on-high:
     description: Fail when a high-severity finding is present.
+    required: false
+    default: "false"
+  fail-on-regression:
+    description: Fail only when the current scan introduces a regression from the baseline report.
     required: false
     default: "false"
 
@@ -44,6 +51,10 @@ outputs:
     description: Path to the standalone HTML report.
   json-path:
     description: Path to the machine-readable JSON report.
+  regressions:
+    description: Number of newly introduced regressions when a baseline report is provided.
+  comparison-path:
+    description: Path to comparison.json when a baseline report is provided.
 
 runs:
   using: node24

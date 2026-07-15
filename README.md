@@ -15,18 +15,19 @@ The score is a navigation aid, not a certification. Every finding identifies
 the rule, outcome, evidence, and remediation, while evidence Maniflight cannot
 reliably observe is marked unknown instead of becoming a silent pass or fail.
 
-> **v0.1 status:** early public preview. The current release is a
-> general-purpose repository scanner. AI-service and Kubernetes readiness
-> packs are future, opt-in roadmap work and are not claimed as current
-> features.
+> **v0.2 status:** public preview. Baseline comparison is explicit and opt-in;
+> Maniflight never downloads a baseline or expands token permissions on its
+> own. AI-service and Kubernetes readiness packs remain future roadmap work.
 
-## What v0.1 does
+## What v0.2 does
 
 - Scans a local repository without modifying it.
 - Applies deterministic rules across four evidence domains.
 - Uses optional repository-scoped GitHub metadata when a token is provided.
-- Writes `report.json`, `report.html`, and `orbit.svg` to the selected
-  output directory.
+- Writes `report.json`, `report.html`, and `orbit.svg` to the selected output
+  directory, plus `comparison.json` when a baseline is supplied.
+- Compares a current scan with an explicit earlier report and can gate only on
+  newly introduced regressions instead of pre-existing debt.
 - Presents findings in an accessible report with source-linked evidence,
   keyboard navigation, light and dark themes, print styles, and reduced-motion
   support.
@@ -68,17 +69,40 @@ are:
 | `-r, --repository <owner/name>` | Request optional read-only GitHub metadata for a repository. |
 | `-c, --config <path>` | Select a configuration file inside the inspected repository. |
 | `--offline` | Skip GitHub API enrichment even when environment metadata is available. |
+| `--baseline-report <path>` | Compare with an explicit earlier Maniflight `report.json`. |
 | `--fail-under <score>` | Exit unsuccessfully when the overall score is below an owner-selected threshold. |
 | `--fail-on-high` | Exit unsuccessfully when an unwaived high-severity finding remains. |
+| `--fail-on-regression` | Exit unsuccessfully only when the current scan regresses from a supplied baseline. |
 
 When enrichment is requested, the CLI can read `GITHUB_TOKEN` and
 `GITHUB_REPOSITORY` from the environment. Do not place a token in the command
 line or configuration file.
 
+### Compare with an earlier report
+
+Keep a trusted report from the branch or release you consider the baseline,
+then pass it explicitly:
+
+```bash
+npm run scan -- . \
+  --baseline-report ./baseline/report.json \
+  --fail-on-regression \
+  --output maniflight-report
+```
+
+Maniflight matches checks by stable rule ID. A move from pass to warning or
+failure, or from warning to failure, is a regression; the reverse is an
+improvement. Changes involving unknown or not-applicable evidence and changes
+to the rule catalog stay visible but do not trigger the regression gate. Score
+and confidence deltas are informational.
+
+The baseline remains local and is treated as untrusted input: it must be a
+bounded, regular UTF-8 JSON file with a supported schema. Maniflight does not
+fetch artifacts, check out refs, or request write permissions.
+
 ## GitHub Action
 
-The public Action reference becomes available after the `v0` release is
-published. A minimal workflow is:
+The stable preview reference is `agrovr/maniflight@v0`. A minimal workflow is:
 
 ```yaml
 name: Repository preflight
@@ -122,8 +146,10 @@ documented feature requires another permission.
 | `github-token` | unset | Optional repository-scoped token for read-only GitHub metadata. |
 | `repository` | current Actions repository | Repository in `owner/name` form. |
 | `config` | `.maniflight.yml` | Optional configuration path. |
+| `baseline-report` | unset | Explicit path to a previous Maniflight `report.json` inside the workspace. |
 | `fail-under` | unset | Optional overall-score gate selected by the repository owner. |
 | `fail-on-high` | `false` | Optionally fail when a high-severity finding exists. |
+| `fail-on-regression` | `false` | Optionally fail when the current scan regresses from the supplied baseline. |
 
 Gates are opt-in because a new or partially observable repository should not
 fail from an unexplained default policy.
@@ -137,6 +163,8 @@ fail from an unexplained default policy.
 | `high-findings` | Count of high-severity findings. |
 | `report-path` | Path to the standalone HTML report. |
 | `json-path` | Path to the machine-readable JSON report. |
+| `regressions` | Number of new regressions when a baseline was supplied. |
+| `comparison-path` | Path to `comparison.json` when a baseline was supplied. |
 
 Upload the report as an artifact in your own workflow if it needs to persist
 after the job. Maniflight does not publish repository data to a hosted service.
@@ -150,7 +178,7 @@ after the job. Maniflight does not publish repository data to a hosted service.
 | Security | Are baseline policy, dependency, workflow-permission, reference-pinning, and sensitive-file safeguards visible? |
 | Community | Can another person understand, use, support, and contribute to the project responsibly? |
 
-The complete v0.1 catalog and its limitations are documented in
+The complete current rule catalog and its limitations are documented in
 [docs/RULES.md](docs/RULES.md).
 
 ## Scoring and confidence
@@ -167,8 +195,8 @@ and guidance on responsible gating.
 ## Configuration
 
 Maniflight looks for `.maniflight.yml` by default, or a different file passed
-through the Action's `config` input. Configuration is optional for the v0.1
-baseline. Because the format is pre-1.0, review release notes before carrying a
+through the Action's `config` input. Configuration remains optional in v0.2.
+Because the format is pre-1.0, review release notes before carrying a
 configuration across preview releases.
 
 ```yaml
@@ -219,12 +247,15 @@ repository files + optional read-only GitHub metadata
                          ▼
             score + confidence + findings
                          │
+              optional baseline report
+                         │
                          ▼
-        report.json + report.html + orbit.svg
+ report.json + report.html + orbit.svg [+ comparison.json]
 ```
 
-The JSON report is the automation contract. The HTML and SVG views make that
-same evidence easier to navigate; they do not invent additional findings.
+The JSON report is the scan contract. `comparison.json` has its own versioned
+contract. The HTML and SVG views make the same evidence easier to navigate;
+they do not invent additional findings.
 
 ## Develop and verify
 
@@ -242,8 +273,8 @@ and matching documentation.
 
 ## Project boundaries and roadmap
 
-The [roadmap](ROADMAP.md) tracks evidence comparison, monorepo improvements,
-configuration maturity, and future opt-in AI/Kubernetes readiness packs.
+The [roadmap](ROADMAP.md) tracks comparison maturity, monorepo improvements,
+configuration stability, and future opt-in AI/Kubernetes readiness packs.
 Maniflight deliberately avoids contributor scoring, automatic repair, and
 unqualified security or compliance claims.
 

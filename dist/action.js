@@ -2,7 +2,8 @@ import { realpath } from "node:fs/promises";
 import { isAbsolute, relative, resolve } from "node:path";
 import * as core from "@actions/core";
 import { evaluateGates } from "./gates.js";
-import { writeReportArtifacts } from "./output.js";
+import { loadBaselineReport, writeReportArtifacts } from "./output.js";
+import { compareReports } from "./report/compare.js";
 import { runManiflight } from "./run.js";
 function optionalInput(name) {
     const value = core.getInput(name).trim();
@@ -42,6 +43,15 @@ export async function runAction() {
         }
         const token = optionalInput("github-token");
         const repository = optionalInput("repository") ?? process.env.GITHUB_REPOSITORY;
+        const baselineInput = optionalInput("baseline-report");
+        const baselinePath = baselineInput
+            ? resolveInsideWorkspace(workspace, baselineInput, "baseline-report")
+            : undefined;
+        const failOnRegressionInput = optionalInput("fail-on-regression");
+        const failOnRegression = failOnRegressionInput === undefined ? false : core.getBooleanInput("fail-on-regression");
+        if (failOnRegression && !baselinePath) {
+            throw new Error("fail-on-regression requires baseline-report");
+        }
         if (token)
             core.setSecret(token);
         const result = await runManiflight({
@@ -51,7 +61,9 @@ export async function runAction() {
             ...(repository ? { repository } : {}),
             ...(token ? { token } : {}),
         });
-        const artifacts = await writeReportArtifacts(result.report, outputDirectory, workspace);
+        const baseline = baselinePath ? await loadBaselineReport(baselinePath, workspace) : undefined;
+        const comparison = baseline ? compareReports(result.report, baseline) : undefined;
+        const artifacts = await writeReportArtifacts(result.report, outputDirectory, workspace, comparison);
         const failUnder = optionalScore("fail-under") ?? result.config.thresholds.failUnder;
         const failOnHighInput = optionalInput("fail-on-high");
         const failOnHigh = failOnHighInput === undefined
@@ -62,7 +74,9 @@ export async function runAction() {
         core.setOutput("high-findings", result.report.summary.highFindings);
         core.setOutput("report-path", artifacts.html);
         core.setOutput("json-path", artifacts.json);
-        await core.summary
+        core.setOutput("regressions", comparison?.summary.regressions ?? "");
+        core.setOutput("comparison-path", artifacts.comparison ?? "");
+        const summary = core.summary
             .addHeading("Maniflight repository preflight", 2)
             .addRaw(`**${result.report.overall.label.replaceAll("-", " ")}** · ` +
             `${result.report.overall.score ?? "not scored"}/100 · ` +
@@ -80,10 +94,30 @@ export async function runAction() {
                 String(result.report.summary.fail),
                 String(result.report.summary.unknown),
             ],
-        ])
-            .addRaw(`\nReport files were written to \`${artifacts.directory}\`.\n`)
-            .write();
-        const failures = evaluateGates(result.report, { failUnder, failOnHigh });
+        ]);
+        if (comparison) {
+            summary.addHeading("Changes from baseline", 3).addTable([
+                [
+                    { data: "Regressions", header: true },
+                    { data: "Improvements", header: true },
+                    { data: "Evidence changes", header: true },
+                    { data: "Catalog changes", header: true },
+                ],
+                [
+                    String(comparison.summary.regressions),
+                    String(comparison.summary.improvements),
+                    String(comparison.summary.evidenceChanges),
+                    String(comparison.summary.added + comparison.summary.removed),
+                ],
+            ]);
+        }
+        await summary.addRaw(`\nReport files were written to \`${artifacts.directory}\`.\n`).write();
+        const failures = evaluateGates(result.report, {
+            failUnder,
+            failOnHigh,
+            failOnRegression,
+            ...(comparison ? { regressionCount: comparison.summary.regressions } : {}),
+        });
         if (failures.length > 0)
             core.setFailed(failures.join("; "));
     }

@@ -1,5 +1,6 @@
 import { Octokit } from "@octokit/rest";
 import type { GitHubRepositoryMetadata } from "../model.js";
+import { VERSION } from "../version.js";
 
 interface ApiResponse {
   data: unknown;
@@ -78,7 +79,7 @@ export async function collectGitHub(
     options.client ??
     (new Octokit({
       ...(options.token ? { auth: options.token } : {}),
-      userAgent: "maniflight/0.1.0",
+      userAgent: `maniflight/${VERSION}`,
       request: {
         headers: {
           accept: "application/vnd.github+json",

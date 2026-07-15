@@ -1,0 +1,448 @@
+{
+  "schemaVersion": "1.0",
+  "baseline": {
+    "repository": {
+      "name": "Maniflight"
+    },
+    "reportSchemaVersion": "1.0",
+    "toolVersion": "0.2.0",
+    "score": 100,
+    "confidence": 98.5
+  },
+  "current": {
+    "repository": {
+      "name": "Maniflight"
+    },
+    "reportSchemaVersion": "1.0",
+    "toolVersion": "0.2.0",
+    "score": 100,
+    "confidence": 98.5
+  },
+  "metrics": {
+    "score": {
+      "baseline": 100,
+      "current": 100,
+      "delta": 0
+    },
+    "confidence": {
+      "baseline": 98.5,
+      "current": 98.5,
+      "delta": 0
+    }
+  },
+  "summary": {
+    "regressions": 0,
+    "improvements": 0,
+    "evidenceChanges": 0,
+    "added": 0,
+    "removed": 0,
+    "unchanged": 25
+  },
+  "regressions": [],
+  "improvements": [],
+  "evidenceChanges": [],
+  "added": [],
+  "removed": [],
+  "unchanged": [
+    {
+      "ruleId": "architecture/manifest-present",
+      "baseline": {
+        "domain": "architecture",
+        "title": "Project manifest",
+        "status": "pass",
+        "severity": "medium"
+      },
+      "current": {
+        "domain": "architecture",
+        "title": "Project manifest",
+        "status": "pass",
+        "severity": "medium"
+      },
+      "kind": "unchanged"
+    },
+    {
+      "ruleId": "architecture/package-entrypoints",
+      "baseline": {
+        "domain": "architecture",
+        "title": "Package entrypoints",
+        "status": "pass",
+        "severity": "medium"
+      },
+      "current": {
+        "domain": "architecture",
+        "title": "Package entrypoints",
+        "status": "pass",
+        "severity": "medium"
+      },
+      "kind": "unchanged"
+    },
+    {
+      "ruleId": "architecture/source-boundary",
+      "baseline": {
+        "domain": "architecture",
+        "title": "Source boundary",
+        "status": "pass",
+        "severity": "low"
+      },
+      "current": {
+        "domain": "architecture",
+        "title": "Source boundary",
+        "status": "pass",
+        "severity": "low"
+      },
+      "kind": "unchanged"
+    },
+    {
+      "ruleId": "architecture/test-capability",
+      "baseline": {
+        "domain": "architecture",
+        "title": "Test capability",
+        "status": "pass",
+        "severity": "medium"
+      },
+      "current": {
+        "domain": "architecture",
+        "title": "Test capability",
+        "status": "pass",
+        "severity": "medium"
+      },
+      "kind": "unchanged"
+    },
+    {
+      "ruleId": "architecture/typescript-strict",
+      "baseline": {
+        "domain": "architecture",
+        "title": "TypeScript strictness",
+        "status": "pass",
+        "severity": "medium"
+      },
+      "current": {
+        "domain": "architecture",
+        "title": "TypeScript strictness",
+        "status": "pass",
+        "severity": "medium"
+      },
+      "kind": "unchanged"
+    },
+    {
+      "ruleId": "automation/deploy-safety",
+      "baseline": {
+        "domain": "automation",
+        "title": "Deployment safety",
+        "status": "not_applicable",
+        "severity": "high"
+      },
+      "current": {
+        "domain": "automation",
+        "title": "Deployment safety",
+        "status": "not_applicable",
+        "severity": "high"
+      },
+      "kind": "unchanged"
+    },
+    {
+      "ruleId": "automation/job-timeout",
+      "baseline": {
+        "domain": "automation",
+        "title": "Job timeouts",
+        "status": "pass",
+        "severity": "low"
+      },
+      "current": {
+        "domain": "automation",
+        "title": "Job timeouts",
+        "status": "pass",
+        "severity": "low"
+      },
+      "kind": "unchanged"
+    },
+    {
+      "ruleId": "automation/pr-validation",
+      "baseline": {
+        "domain": "automation",
+        "title": "Pull request validation",
+        "status": "pass",
+        "severity": "high"
+      },
+      "current": {
+        "domain": "automation",
+        "title": "Pull request validation",
+        "status": "pass",
+        "severity": "high"
+      },
+      "kind": "unchanged"
+    },
+    {
+      "ruleId": "automation/workflow-present",
+      "baseline": {
+        "domain": "automation",
+        "title": "Automation workflow",
+        "status": "pass",
+        "severity": "medium"
+      },
+      "current": {
+        "domain": "automation",
+        "title": "Automation workflow",
+        "status": "pass",
+        "severity": "medium"
+      },
+      "kind": "unchanged"
+    },
+    {
+      "ruleId": "community/code-of-conduct",
+      "baseline": {
+        "domain": "community",
+        "title": "Code of conduct",
+        "status": "pass",
+        "severity": "low"
+      },
+      "current": {
+        "domain": "community",
+        "title": "Code of conduct",
+        "status": "pass",
+        "severity": "low"
+      },
+      "kind": "unchanged"
+    },
+    {
+      "ruleId": "community/contributing",
+      "baseline": {
+        "domain": "community",
+        "title": "Contribution guide",
+        "status": "pass",
+        "severity": "low"
+      },
+      "current": {
+        "domain": "community",
+        "title": "Contribution guide",
+        "status": "pass",
+        "severity": "low"
+      },
+      "kind": "unchanged"
+    },
+    {
+      "ruleId": "community/issue-template",
+      "baseline": {
+        "domain": "community",
+        "title": "Issue template",
+        "status": "pass",
+        "severity": "low"
+      },
+      "current": {
+        "domain": "community",
+        "title": "Issue template",
+        "status": "pass",
+        "severity": "low"
+      },
+      "kind": "unchanged"
+    },
+    {
+      "ruleId": "community/license",
+      "baseline": {
+        "domain": "community",
+        "title": "License",
+        "status": "pass",
+        "severity": "high"
+      },
+      "current": {
+        "domain": "community",
+        "title": "License",
+        "status": "pass",
+        "severity": "high"
+      },
+      "kind": "unchanged"
+    },
+    {
+      "ruleId": "community/pull-request-template",
+      "baseline": {
+        "domain": "community",
+        "title": "Pull request template",
+        "status": "pass",
+        "severity": "low"
+      },
+      "current": {
+        "domain": "community",
+        "title": "Pull request template",
+        "status": "pass",
+        "severity": "low"
+      },
+      "kind": "unchanged"
+    },
+    {
+      "ruleId": "community/readme",
+      "baseline": {
+        "domain": "community",
+        "title": "README",
+        "status": "pass",
+        "severity": "medium"
+      },
+      "current": {
+        "domain": "community",
+        "title": "README",
+        "status": "pass",
+        "severity": "medium"
+      },
+      "kind": "unchanged"
+    },
+    {
+      "ruleId": "community/repository-metadata",
+      "baseline": {
+        "domain": "community",
+        "title": "Repository metadata",
+        "status": "unknown",
+        "severity": "low"
+      },
+      "current": {
+        "domain": "community",
+        "title": "Repository metadata",
+        "status": "unknown",
+        "severity": "low"
+      },
+      "kind": "unchanged"
+    },
+    {
+      "ruleId": "community/support-channel",
+      "baseline": {
+        "domain": "community",
+        "title": "Support channel",
+        "status": "pass",
+        "severity": "medium"
+      },
+      "current": {
+        "domain": "community",
+        "title": "Support channel",
+        "status": "pass",
+        "severity": "medium"
+      },
+      "kind": "unchanged"
+    },
+    {
+      "ruleId": "security/action-reference-pinned",
+      "baseline": {
+        "domain": "security",
+        "title": "Immutable Action references",
+        "status": "pass",
+        "severity": "high"
+      },
+      "current": {
+        "domain": "security",
+        "title": "Immutable Action references",
+        "status": "pass",
+        "severity": "high"
+      },
+      "kind": "unchanged"
+    },
+    {
+      "ruleId": "security/dependency-updates",
+      "baseline": {
+        "domain": "security",
+        "title": "Dependency update automation",
+        "status": "pass",
+        "severity": "medium"
+      },
+      "current": {
+        "domain": "security",
+        "title": "Dependency update automation",
+        "status": "pass",
+        "severity": "medium"
+      },
+      "kind": "unchanged"
+    },
+    {
+      "ruleId": "security/lockfile-present",
+      "baseline": {
+        "domain": "security",
+        "title": "Dependency lockfile",
+        "status": "pass",
+        "severity": "high"
+      },
+      "current": {
+        "domain": "security",
+        "title": "Dependency lockfile",
+        "status": "pass",
+        "severity": "high"
+      },
+      "kind": "unchanged"
+    },
+    {
+      "ruleId": "security/policy-present",
+      "baseline": {
+        "domain": "security",
+        "title": "Security policy",
+        "status": "pass",
+        "severity": "medium"
+      },
+      "current": {
+        "domain": "security",
+        "title": "Security policy",
+        "status": "pass",
+        "severity": "medium"
+      },
+      "kind": "unchanged"
+    },
+    {
+      "ruleId": "security/pull-request-target-checkout",
+      "baseline": {
+        "domain": "security",
+        "title": "Privileged pull request checkout",
+        "status": "pass",
+        "severity": "high"
+      },
+      "current": {
+        "domain": "security",
+        "title": "Privileged pull request checkout",
+        "status": "pass",
+        "severity": "high"
+      },
+      "kind": "unchanged"
+    },
+    {
+      "ruleId": "security/sensitive-filename",
+      "baseline": {
+        "domain": "security",
+        "title": "Sensitive filenames",
+        "status": "pass",
+        "severity": "high"
+      },
+      "current": {
+        "domain": "security",
+        "title": "Sensitive filenames",
+        "status": "pass",
+        "severity": "high"
+      },
+      "kind": "unchanged"
+    },
+    {
+      "ruleId": "security/untrusted-context-in-run",
+      "baseline": {
+        "domain": "security",
+        "title": "Untrusted context in shell",
+        "status": "pass",
+        "severity": "high"
+      },
+      "current": {
+        "domain": "security",
+        "title": "Untrusted context in shell",
+        "status": "pass",
+        "severity": "high"
+      },
+      "kind": "unchanged"
+    },
+    {
+      "ruleId": "security/workflow-permissions",
+      "baseline": {
+        "domain": "security",
+        "title": "Workflow token permissions",
+        "status": "pass",
+        "severity": "high"
+      },
+      "current": {
+        "domain": "security",
+        "title": "Workflow token permissions",
+        "status": "pass",
+        "severity": "high"
+      },
+      "kind": "unchanged"
+    }
+  ]
+}
