@@ -4,6 +4,8 @@ import { pathToFileURL } from "node:url";
 import { Command, InvalidArgumentError } from "commander";
 import { evaluateGates } from "./gates.js";
 import { loadBaselineReport, writeReportArtifacts } from "./output.js";
+import { renderPullRequestFlight } from "./pr/render.js";
+import { runPullRequestFlight } from "./pr/run.js";
 import { compareReports } from "./report/compare.js";
 import { runManiflight } from "./run.js";
 import { VERSION } from "./version.js";
@@ -17,9 +19,20 @@ function scoreValue(value) {
 function displayScore(score) {
     return score === null ? "not scored" : `${score}/100`;
 }
-export async function runCli(arguments_ = process.argv) {
+function githubTokenFromEnvironment() {
+    const ghToken = process.env.GH_TOKEN?.trim();
+    if (ghToken)
+        return ghToken;
+    const githubToken = process.env.GITHUB_TOKEN?.trim();
+    return githubToken || undefined;
+}
+export async function runCli(arguments_ = process.argv, dependencies = {}) {
     const program = new Command();
-    program.name("maniflight").description("Evidence-backed repository preflight").version(VERSION);
+    program
+        .name("maniflight")
+        .description("Read-only repository and pull-request diagnostics")
+        .version(VERSION)
+        .addHelpText("after", "\nAuthentication:\n  PR inspection reads GH_TOKEN, then GITHUB_TOKEN. Tokens are never accepted as arguments.\n");
     program
         .command("scan")
         .description("Inspect a repository without executing its code")
@@ -73,6 +86,20 @@ export async function runCli(arguments_ = process.argv) {
             process.stderr.write(`${failures.join("\n")}\n`);
             process.exitCode = 1;
         }
+    });
+    program
+        .command("pr")
+        .description("Explain live pull-request blockers and who can act next")
+        .argument("<owner/repository#number>", "pull request to inspect")
+        .option("--json", "emit one schema-versioned JSON document", false)
+        .action(async (target, options) => {
+        const inspect = dependencies.inspectPullRequest ?? runPullRequestFlight;
+        const token = githubTokenFromEnvironment();
+        const report = await inspect(target, {
+            ...(token ? { token } : {}),
+            observedAt: (dependencies.now?.() ?? new Date()).toISOString(),
+        });
+        process.stdout.write(options.json ? `${JSON.stringify(report, null, 2)}\n` : renderPullRequestFlight(report));
     });
     await program.parseAsync(arguments_);
 }

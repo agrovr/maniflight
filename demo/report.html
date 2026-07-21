@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="color-scheme" content="dark light" />
   <meta http-equiv="Content-Security-Policy" content="default-src &#39;none&#39;; base-uri &#39;none&#39;; connect-src &#39;none&#39;; font-src &#39;none&#39;; form-action &#39;none&#39;; frame-src &#39;none&#39;; img-src data:; media-src &#39;none&#39;; object-src &#39;none&#39;; script-src &#39;sha256-Hz2KC1jyXt2JKlm4g1VHKIovL53DQIoMtgsGOlIheTg=&#39;; style-src &#39;sha256-5VN+mJyHn7ne+HwAHaqOu8oQRlZNQPeRTK5rAqySEds=&#39;" />
-  <title>Maniflight · Maniflight repository preflight</title>
+  <title>Maniflight · Maniflight repository diagnostics</title>
   <style>
 :root {
   color-scheme: dark light;
@@ -1222,7 +1222,7 @@ progress::-moz-progress-bar {
 <body>
   <a class="skip-link" href="#main-content">Skip to report</a>
   <header class="topbar">
-    <p class="product-label">MANIFLIGHT / REPOSITORY PREFLIGHT</p>
+    <p class="product-label">MANIFLIGHT / REPOSITORY DIAGNOSTICS</p>
     <button class="theme-toggle" id="theme-toggle" type="button">Theme</button>
   </header>
   <main class="shell" id="main-content">
@@ -1230,7 +1230,7 @@ progress::-moz-progress-bar {
     <section class="summary" aria-labelledby="report-title">
       <div class="summary-copy">
         <p class="repository-path"><span>Maniflight</span></p>
-        <h1 id="report-title">Repository preflight</h1>
+        <h1 id="report-title">Repository diagnostics</h1>
         <p class="summary-text">24 checks were evaluated; 1 needs attention or more context. Open a result to inspect its evidence and next action.</p>
         <nav class="priority-links" aria-label="Priority findings">
     <span>Priority findings</span>
@@ -1517,7 +1517,7 @@ progress::-moz-progress-bar {
       data-domain="architecture"
       data-status="pass"
       data-severity="medium"
-      data-search="architecture/test-capability Test capability The repository includes tests and a discoverable way to run them. pass medium Add focused tests and expose a standard test command in the project manifest.  11 test file(s) detected A test command or test configuration was detected"
+      data-search="architecture/test-capability Test capability The repository includes tests and a discoverable way to run them. pass medium Add focused tests and expose a standard test command in the project manifest.  15 test file(s) detected A test command or test configuration was detected"
     >
       <details id="check-architecture-test-capability-3">
         <summary>
@@ -1541,7 +1541,7 @@ progress::-moz-progress-bar {
           </div>
           <div>
             <h3>Evidence</h3>
-            <ul class="evidence-list"><li>11 test file(s) detected</li><li>A test command or test configuration was detected</li></ul>
+            <ul class="evidence-list"><li>15 test file(s) detected</li><li>A test command or test configuration was detected</li></ul>
             <div>
         <h3>Next action</h3>
         <p>Add focused tests and expose a standard test command in the project manifest.</p>
@@ -1634,7 +1634,7 @@ progress::-moz-progress-bar {
       data-domain="automation"
       data-status="pass"
       data-severity="medium"
-      data-search="automation/workflow-present Automation workflow At least one readable GitHub Actions workflow is present. pass medium Add a minimal validation workflow that runs on pull requests.  .github/workflows/ci.yml — Readable workflow .github/workflows/codeql.yml — Readable workflow .github/workflows/dogfood.yml — Readable workflow .github/workflows/pages.yml — Readable workflow"
+      data-search="automation/workflow-present Automation workflow At least one readable GitHub Actions workflow is present. pass medium Add a minimal validation workflow that runs on pull requests.  .github/workflows/ci.yml — Readable workflow .github/workflows/codeql.yml — Readable workflow .github/workflows/dogfood.yml — Readable workflow .github/workflows/pages.yml — Readable workflow .github/workflows/release.yml — Readable workflow"
     >
       <details id="check-automation-workflow-present-6">
         <summary>
@@ -1658,7 +1658,7 @@ progress::-moz-progress-bar {
           </div>
           <div>
             <h3>Evidence</h3>
-            <ul class="evidence-list"><li><code>.github/workflows/ci.yml</code> — Readable workflow</li><li><code>.github/workflows/codeql.yml</code> — Readable workflow</li><li><code>.github/workflows/dogfood.yml</code> — Readable workflow</li><li><code>.github/workflows/pages.yml</code> — Readable workflow</li></ul>
+            <ul class="evidence-list"><li><code>.github/workflows/ci.yml</code> — Readable workflow</li><li><code>.github/workflows/codeql.yml</code> — Readable workflow</li><li><code>.github/workflows/dogfood.yml</code> — Readable workflow</li><li><code>.github/workflows/pages.yml</code> — Readable workflow</li><li><code>.github/workflows/release.yml</code> — Readable workflow</li></ul>
             <div>
         <h3>Next action</h3>
         <p>Add a minimal validation workflow that runs on pull requests.</p>
@@ -1712,7 +1712,7 @@ progress::-moz-progress-bar {
       data-domain="automation"
       data-status="pass"
       data-severity="low"
-      data-search="automation/job-timeout Job timeouts Workflow jobs have explicit timeout limits. pass low Set timeout-minutes on every workflow job to bound stalled runs.  5 of 5 job(s) declare timeout-minutes"
+      data-search="automation/job-timeout Job timeouts Workflow jobs have explicit timeout limits. pass low Set timeout-minutes on every workflow job to bound stalled runs.  6 of 6 job(s) declare timeout-minutes"
     >
       <details id="check-automation-job-timeout-8">
         <summary>
@@ -1736,7 +1736,7 @@ progress::-moz-progress-bar {
           </div>
           <div>
             <h3>Evidence</h3>
-            <ul class="evidence-list"><li>5 of 5 job(s) declare timeout-minutes</li></ul>
+            <ul class="evidence-list"><li>6 of 6 job(s) declare timeout-minutes</li></ul>
             <div>
         <h3>Next action</h3>
         <p>Set timeout-minutes on every workflow job to bound stalled runs.</p>
@@ -1946,7 +1946,7 @@ progress::-moz-progress-bar {
       data-domain="security"
       data-status="pass"
       data-severity="high"
-      data-search="security/action-reference-pinned Immutable Action references External Actions and containers are pinned to immutable commit or digest references. pass high Pin third-party Actions to a full 40-character commit SHA and containers to a digest.  .github/workflows/ci.yml — Immutable reference .github/workflows/ci.yml — Immutable reference .github/workflows/codeql.yml — Immutable reference .github/workflows/codeql.yml — Immutable reference .github/workflows/codeql.yml — Immutable reference .github/workflows/dogfood.yml — Immutable reference .github/workflows/dogfood.yml — Immutable reference .github/workflows/dogfood.yml — Immutable reference .github/workflows/pages.yml — Immutable reference .github/workflows/pages.yml — Immutable reference .github/workflows/pages.yml — Immutable reference .github/workflows/pages.yml — Immutable reference .github/workflows/pages.yml — Immutable reference"
+      data-search="security/action-reference-pinned Immutable Action references External Actions and containers are pinned to immutable commit or digest references. pass high Pin third-party Actions to a full 40-character commit SHA and containers to a digest.  .github/workflows/ci.yml — Immutable reference .github/workflows/ci.yml — Immutable reference .github/workflows/codeql.yml — Immutable reference .github/workflows/codeql.yml — Immutable reference .github/workflows/codeql.yml — Immutable reference .github/workflows/dogfood.yml — Immutable reference .github/workflows/dogfood.yml — Immutable reference .github/workflows/dogfood.yml — Immutable reference .github/workflows/pages.yml — Immutable reference .github/workflows/pages.yml — Immutable reference .github/workflows/pages.yml — Immutable reference .github/workflows/pages.yml — Immutable reference .github/workflows/pages.yml — Immutable reference .github/workflows/release.yml — Immutable reference .github/workflows/release.yml — Immutable reference"
     >
       <details id="check-security-action-reference-pinned-14">
         <summary>
@@ -1970,7 +1970,7 @@ progress::-moz-progress-bar {
           </div>
           <div>
             <h3>Evidence</h3>
-            <ul class="evidence-list"><li><code>.github/workflows/ci.yml</code> — Immutable reference</li><li><code>.github/workflows/ci.yml</code> — Immutable reference</li><li><code>.github/workflows/codeql.yml</code> — Immutable reference</li><li><code>.github/workflows/codeql.yml</code> — Immutable reference</li><li><code>.github/workflows/codeql.yml</code> — Immutable reference</li><li><code>.github/workflows/dogfood.yml</code> — Immutable reference</li><li><code>.github/workflows/dogfood.yml</code> — Immutable reference</li><li><code>.github/workflows/dogfood.yml</code> — Immutable reference</li><li><code>.github/workflows/pages.yml</code> — Immutable reference</li><li><code>.github/workflows/pages.yml</code> — Immutable reference</li><li><code>.github/workflows/pages.yml</code> — Immutable reference</li><li><code>.github/workflows/pages.yml</code> — Immutable reference</li><li><code>.github/workflows/pages.yml</code> — Immutable reference</li></ul>
+            <ul class="evidence-list"><li><code>.github/workflows/ci.yml</code> — Immutable reference</li><li><code>.github/workflows/ci.yml</code> — Immutable reference</li><li><code>.github/workflows/codeql.yml</code> — Immutable reference</li><li><code>.github/workflows/codeql.yml</code> — Immutable reference</li><li><code>.github/workflows/codeql.yml</code> — Immutable reference</li><li><code>.github/workflows/dogfood.yml</code> — Immutable reference</li><li><code>.github/workflows/dogfood.yml</code> — Immutable reference</li><li><code>.github/workflows/dogfood.yml</code> — Immutable reference</li><li><code>.github/workflows/pages.yml</code> — Immutable reference</li><li><code>.github/workflows/pages.yml</code> — Immutable reference</li><li><code>.github/workflows/pages.yml</code> — Immutable reference</li><li><code>.github/workflows/pages.yml</code> — Immutable reference</li><li><code>.github/workflows/pages.yml</code> — Immutable reference</li><li><code>.github/workflows/release.yml</code> — Immutable reference</li><li><code>.github/workflows/release.yml</code> — Immutable reference</li></ul>
             <div>
         <h3>Next action</h3>
         <p>Pin third-party Actions to a full 40-character commit SHA and containers to a digest.</p>
@@ -2412,7 +2412,7 @@ progress::-moz-progress-bar {
       <p class="empty-state" id="empty-state" hidden>No checks match these filters. Reset the filters or broaden the search.</p>
     </section>
     <footer class="report-footer">
-      <span>Maniflight 0.2.0 · schema 1.0</span>
+      <span>Maniflight 1.0.0 · schema 1.0</span>
       <span>Deterministic timestamp omitted</span>
     </footer>
   </main>

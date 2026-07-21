@@ -1,6 +1,6 @@
 # Contributing to Maniflight
 
-Thank you for helping make repository preflight checks more useful,
+Thank you for helping make repository diagnostics more useful,
 explainable, and trustworthy.
 
 By participating, you agree to follow the
@@ -30,7 +30,7 @@ project, not manufacture activity.
 
 Requirements:
 
-- Node.js 22 or newer;
+- Node.js 22.12+ within the 22.x line, or Node.js 24;
 - npm; and
 - Git.
 
@@ -42,7 +42,7 @@ npm run build
 npm test
 ```
 
-Run a local preflight against the repository:
+Run a local scan against the repository:
 
 ```bash
 npm run scan -- . --output maniflight-report

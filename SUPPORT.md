@@ -1,7 +1,7 @@
 # Support
 
-Maniflight is an early open-source project maintained on a best-effort basis.
-The following routes keep questions actionable and security reports private.
+Maniflight is maintained on a best-effort basis. The following routes keep
+questions actionable and security reports private.
 
 ## Choose a channel
 
@@ -40,5 +40,5 @@ configuration, and generated report. It does not include private consulting,
 repository certification, legal or compliance advice, or guaranteed response
 times.
 
-Maniflight findings are preflight signals, not a substitute for code review,
+Maniflight findings are diagnostic signals, not a substitute for code review,
 security testing, or production monitoring.

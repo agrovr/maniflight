@@ -14,11 +14,11 @@ Maniflight is for maintainers and small engineering teams preparing a GitHub rep
 
 ## Product Purpose
 
-Maniflight performs read-only preflight checks across repository architecture, automation, security hygiene, and community readiness. It produces a transparent JSON record plus an accessible standalone report that makes gaps easy to inspect and act on. Success means a maintainer can understand what was checked, what was not knowable, and the next concrete improvement without mistaking the score for a certification.
+Maniflight performs read-only diagnostics across repository architecture, automation, security hygiene, community readiness, and live pull-request state. It produces transparent JSON plus accessible human output that makes blockers and evidence gaps easy to inspect and act on. Success means a maintainer or contributor can understand what was checked, what was not knowable, and the next concrete action without mistaking the result for a certification.
 
 ## Positioning
 
-Repository preflight that shows its evidence.
+GitHub diagnostics that show their evidence.
 
 ## Brand Personality
 

@@ -77,7 +77,7 @@ export async function runAction() {
         core.setOutput("regressions", comparison?.summary.regressions ?? "");
         core.setOutput("comparison-path", artifacts.comparison ?? "");
         const summary = core.summary
-            .addHeading("Maniflight repository preflight", 2)
+            .addHeading("Maniflight repository diagnostics", 2)
             .addRaw(`**${result.report.overall.label.replaceAll("-", " ")}** · ` +
             `${result.report.overall.score ?? "not scored"}/100 · ` +
             `${result.report.overall.confidence}% confidence\n\n`)

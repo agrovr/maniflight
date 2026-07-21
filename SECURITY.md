@@ -6,15 +6,15 @@ private repositories as private data.
 
 ## Supported versions
 
-Maniflight is pre-1.0. Security fixes are made against the latest published
-release and the default branch. Older preview releases may not receive
-backports.
+Security fixes are made against the latest 1.x release and the default branch.
+Older major releases may not receive backports.
 
 ## Report a vulnerability
 
 Do not open a public issue for a suspected vulnerability.
 
-Email [agrovr.apps@gmail.com](mailto:agrovr.apps@gmail.com) with the subject
+Use GitHub's **Security → Report a vulnerability** form to open a private security advisory. If the
+form is unavailable, email [agrovr.apps@gmail.com](mailto:agrovr.apps@gmail.com) with the subject
 `[Maniflight security] Short description`. Include:
 
 - the affected version or commit;
@@ -23,10 +23,6 @@ Email [agrovr.apps@gmail.com](mailto:agrovr.apps@gmail.com) with the subject
 - the impact you observed;
 - any suggested mitigation; and
 - whether and when you plan to disclose the issue.
-
-Once GitHub private vulnerability reporting is enabled, the repository's
-**Security → Report a vulnerability** form will be the preferred channel.
-Until then, email is the private reporting channel.
 
 Please allow up to five business days for an initial acknowledgement. Do not
 send secrets, production tokens, personal data, or private repository contents

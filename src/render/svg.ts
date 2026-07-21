@@ -104,7 +104,7 @@ export function renderReportSvg(report: ManiflightReport): string {
   ).join("; ");
 
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="720" viewBox="0 0 1200 720" role="img" aria-labelledby="title description">
-  <title id="title">Maniflight repository preflight for ${repositoryName}</title>
+  <title id="title">Maniflight repository diagnostics for ${repositoryName}</title>
   <desc id="description">Overall readiness ${overallScoreText}, labeled ${label}. ${escapeXml(domainStates)}.</desc>
   <style>
     :root { color-scheme: dark light; }
@@ -142,7 +142,7 @@ export function renderReportSvg(report: ManiflightReport): string {
     }
   </style>
   <rect class="background" width="1200" height="720" />
-  <text class="product" x="64" y="54">MANIFLIGHT / REPOSITORY PREFLIGHT</text>
+  <text class="product" x="64" y="54">MANIFLIGHT / REPOSITORY DIAGNOSTICS</text>
   <text class="repo" x="64" y="101">${repositoryName}</text>
   <text class="muted" x="64" y="130">Evidence-backed readiness snapshot</text>
   <g transform="translate(1018 88)">

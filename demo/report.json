@@ -2,7 +2,7 @@
   "schemaVersion": "1.0",
   "tool": {
     "name": "Maniflight",
-    "version": "0.2.0"
+    "version": "1.0.0"
   },
   "repository": {
     "name": "Maniflight",
@@ -63,7 +63,7 @@
           "evidence": [
             {
               "kind": "present",
-              "message": "11 test file(s) detected"
+              "message": "15 test file(s) detected"
             },
             {
               "kind": "present",
@@ -145,6 +145,11 @@
               "kind": "present",
               "message": "Readable workflow",
               "path": ".github/workflows/pages.yml"
+            },
+            {
+              "kind": "present",
+              "message": "Readable workflow",
+              "path": ".github/workflows/release.yml"
             }
           ],
           "remediation": "Add a minimal validation workflow that runs on pull requests."
@@ -195,7 +200,7 @@
           "evidence": [
             {
               "kind": "present",
-              "message": "5 of 5 job(s) declare timeout-minutes"
+              "message": "6 of 6 job(s) declare timeout-minutes"
             }
           ],
           "remediation": "Set timeout-minutes on every workflow job to bound stalled runs."
@@ -362,6 +367,16 @@
               "kind": "present",
               "message": "Immutable reference",
               "path": ".github/workflows/pages.yml"
+            },
+            {
+              "kind": "present",
+              "message": "Immutable reference",
+              "path": ".github/workflows/release.yml"
+            },
+            {
+              "kind": "present",
+              "message": "Immutable reference",
+              "path": ".github/workflows/release.yml"
             }
           ],
           "remediation": "Pin third-party Actions to a full 40-character commit SHA and containers to a digest.",

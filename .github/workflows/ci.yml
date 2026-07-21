@@ -14,13 +14,25 @@ concurrency:
 
 jobs:
   verify:
-    name: Node ${{ matrix.node }}
-    runs-on: ubuntu-latest
+    name: ${{ matrix.os }} · Node ${{ matrix.node }}
+    runs-on: ${{ matrix.os }}
     timeout-minutes: 10
     strategy:
       fail-fast: false
       matrix:
-        node: [22, 24]
+        include:
+          - os: ubuntu-latest
+            node: 22
+            artifacts: false
+          - os: ubuntu-latest
+            node: 24
+            artifacts: true
+          - os: windows-latest
+            node: 24
+            artifacts: false
+          - os: macos-latest
+            node: 24
+            artifacts: false
     steps:
       - name: Check out repository
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
@@ -44,9 +56,13 @@ jobs:
         run: npm run build
 
       - name: Generate deterministic demo
-        if: matrix.node == 24
+        if: matrix.artifacts
         run: npm run demo
 
       - name: Verify committed artifacts
-        if: matrix.node == 24
+        if: matrix.artifacts
         run: git diff --exit-code -- dist demo
+
+      - name: Verify release package contents
+        if: matrix.artifacts
+        run: npm pack --dry-run

@@ -94,7 +94,7 @@ export async function runAction(): Promise<void> {
     core.setOutput("comparison-path", artifacts.comparison ?? "");
 
     const summary = core.summary
-      .addHeading("Maniflight repository preflight", 2)
+      .addHeading("Maniflight repository diagnostics", 2)
       .addRaw(
         `**${result.report.overall.label.replaceAll("-", " ")}** · ` +
           `${result.report.overall.score ?? "not scored"}/100 · ` +
