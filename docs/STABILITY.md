@@ -12,6 +12,14 @@ Additive fields and options may be introduced in a minor release. Removing or ch
 behavior requires a major release. GitHub can add API enum values at any time; Maniflight reports an
 unknown value as `unknown` instead of treating it as success.
 
+## Exit behavior
+
+- `maniflight pr` exits `0` after producing a report, including when the pull request is blocked.
+- `maniflight scan` exits `0` after producing its report unless an enabled score, severity, or
+  regression gate is triggered.
+- Either command exits `1` for invalid input, configuration, API, filesystem, or other execution
+  errors. A triggered scan gate also exits `1` after writing the report.
+
 ## Supported runtime
 
 - Node.js 22.12+ within the 22.x line, or Node.js 24

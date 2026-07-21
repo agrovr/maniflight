@@ -1,22 +1,19 @@
 # Maniflight
 
-Maniflight explains why a GitHub pull request is blocked, who can act next, and what repository
-readiness evidence is actually present.
+Maniflight is a stable, read-only CLI and GitHub Action that explains why a pull request is blocked,
+who can act next, and what repository readiness evidence is actually present.
 
-It is read-only: no comments, approvals, reruns, merges, code execution, logs, or artifact
-downloads.
+It never mutates GitHub or executes inspected repository code. It writes only the report files you
+request—no comments, approvals, reruns, merges, log downloads, or artifact downloads.
 
 ## Install
 
-Maniflight 1.x supports Node.js 22.12+ within the 22.x line, or Node.js 24, on Windows, macOS,
-and Linux.
+Maniflight 1.x supports Node.js 22.12+ within the 22.x line, or Node.js 24, on Windows, macOS, and
+Linux. GitHub releases are the supported distribution channel.
 
 ```bash
 npm install --global https://github.com/agrovr/maniflight/releases/download/v1.0.0/maniflight-1.0.0.tgz
 ```
-
-The npm registry is not an advertised install path until package ownership and release provenance
-are verified.
 
 ## Quick start
 
@@ -56,14 +53,11 @@ maniflight scan . --output maniflight-report
 - Explicit baseline regressions when a trusted earlier report is supplied.
 - Evidence coverage: missing or inaccessible data remains `unknown`, never a silent pass.
 
-## Common commands
+## More commands
 
 ```bash
 # Machine-readable PR report
 maniflight pr owner/repository#123 --json
-
-# Repository report: report.json, report.html, and orbit.svg
-maniflight scan . --output maniflight-report
 
 # Compare with an explicit earlier report
 maniflight scan . --baseline-report baseline/report.json --fail-on-regression
@@ -80,22 +74,12 @@ arguments. Run `maniflight <command> --help` for the complete option list.
 - A repository score is a navigation aid, not a security or compliance certification.
 - Every live report records its observation time and exact head SHA.
 
-## Documentation
+## Documentation and support
 
-- [PR Flight Director](docs/PR-FLIGHT.md)
-- [Repository scan and GitHub Action](docs/REPOSITORY-SCAN.md)
-- [Rules](docs/RULES.md) and [scoring](docs/SCORING.md)
-- [Stability and releases](docs/STABILITY.md) and [changelog](CHANGELOG.md)
-- [Roadmap](ROADMAP.md)
+Read the [PR Flight Director](docs/PR-FLIGHT.md) or
+[repository scan and GitHub Action](docs/REPOSITORY-SCAN.md) guide, then see the
+[rules](docs/RULES.md), [scoring model](docs/SCORING.md), [stability policy](docs/STABILITY.md), or
+[roadmap](ROADMAP.md) when needed.
 
-## Contribute
-
-```bash
-npm ci
-npm run check
-npm test
-npm run build
-```
-
-See [CONTRIBUTING.md](CONTRIBUTING.md), [SECURITY.md](SECURITY.md), and [SUPPORT.md](SUPPORT.md).
-Maniflight is available under the [MIT License](LICENSE).
+Contributions follow [CONTRIBUTING.md](CONTRIBUTING.md). Use [SUPPORT.md](SUPPORT.md) for help and
+[SECURITY.md](SECURITY.md) for private vulnerability reports. Licensed under [MIT](LICENSE).

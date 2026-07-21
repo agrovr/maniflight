@@ -22,7 +22,7 @@ jobs:
       matrix:
         include:
           - os: ubuntu-latest
-            node: 22
+            node: 22.12.0
             artifacts: false
           - os: ubuntu-latest
             node: 24
