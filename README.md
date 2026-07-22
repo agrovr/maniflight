@@ -1,7 +1,8 @@
 # Maniflight
 
-Maniflight is a stable, read-only CLI and GitHub Action that explains why a pull request is blocked,
-who can act next, and what repository readiness evidence is actually present.
+Maniflight is a read-only GitHub diagnostics CLI and Action. The CLI's PR Flight Director explains
+why a pull request is blocked and who can act next; the scan command and Action inspect repository
+readiness.
 
 It never mutates GitHub or executes inspected repository code. It writes only the report files you
 request—no comments, approvals, reruns, merges, log downloads, or artifact downloads.
@@ -15,7 +16,7 @@ Linux. GitHub releases are the supported distribution channel.
 npm install --global https://github.com/agrovr/maniflight/releases/download/v1.0.0/maniflight-1.0.0.tgz
 ```
 
-## Quick start
+## PR Flight Director
 
 Inspect a live pull request:
 
@@ -36,13 +37,46 @@ BLOCKED      1 approving review is required [merge blocker]
 ACTION       CI requires manual action
 ```
 
-Inspect a repository without executing its code:
+For machine-readable output, add `--json`. For authenticated evidence, set `GH_TOKEN` or
+`GITHUB_TOKEN`; tokens are never accepted as arguments.
+
+## Repository scan
+
+Inspect a checkout without executing its code:
 
 ```bash
 maniflight scan . --output maniflight-report
 ```
 
+Use `--baseline-report` with `--fail-on-regression` to gate only on new regressions.
 [Explore Maniflight's live self-scan](https://agrovr.github.io/maniflight/).
+
+## GitHub Action
+
+The Action runs the repository scan. PR Flight Director remains a CLI command in 1.x.
+
+```yaml
+name: Repository diagnostics
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  maniflight:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      - uses: agrovr/maniflight@v1
+        with:
+          github-token: ${{ github.token }}
+          repository: ${{ github.repository }}
+```
+
+Pin Maniflight to a reviewed full commit SHA in security-sensitive workflows. The
+[repository scan guide](docs/REPOSITORY-SCAN.md) covers configuration, outputs, and artifact upload.
 
 ## What it checks
 
@@ -53,20 +87,7 @@ maniflight scan . --output maniflight-report
 - Explicit baseline regressions when a trusted earlier report is supplied.
 - Evidence coverage: missing or inaccessible data remains `unknown`, never a silent pass.
 
-## More commands
-
-```bash
-# Machine-readable PR report
-maniflight pr owner/repository#123 --json
-
-# Compare with an explicit earlier report
-maniflight scan . --baseline-report baseline/report.json --fail-on-regression
-```
-
-For authenticated PR evidence, set `GH_TOKEN` or `GITHUB_TOKEN`; tokens are never accepted as
-arguments. Run `maniflight <command> --help` for the complete option list.
-
-## Trust model
+## Trust and limits
 
 - Conditions link to their observable GitHub evidence.
 - Remote names and URLs are sanitized and bounded before output.
@@ -76,9 +97,8 @@ arguments. Run `maniflight <command> --help` for the complete option list.
 
 ## Documentation and support
 
-Read the [PR Flight Director](docs/PR-FLIGHT.md) or
-[repository scan and GitHub Action](docs/REPOSITORY-SCAN.md) guide, then see the
-[rules](docs/RULES.md), [scoring model](docs/SCORING.md), [stability policy](docs/STABILITY.md), or
+Read the [PR Flight Director guide](docs/PR-FLIGHT.md), [rules](docs/RULES.md),
+[scoring model](docs/SCORING.md), [stability policy](docs/STABILITY.md), or
 [roadmap](ROADMAP.md) when needed.
 
 Contributions follow [CONTRIBUTING.md](CONTRIBUTING.md). Use [SUPPORT.md](SUPPORT.md) for help and

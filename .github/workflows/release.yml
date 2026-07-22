@@ -68,3 +68,11 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: gh release create "$GITHUB_REF_NAME" release/* --verify-tag --generate-notes
+
+      - name: Update stable major Action tag
+        env:
+          TAG_NAME: ${{ github.ref_name }}
+        run: |
+          MAJOR_TAG="${TAG_NAME%%.*}"
+          git tag --force "$MAJOR_TAG" "$TAG_NAME^{commit}"
+          git push --force origin "refs/tags/$MAJOR_TAG"

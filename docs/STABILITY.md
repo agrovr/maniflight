@@ -31,12 +31,15 @@ support contract.
 
 ## Release process
 
+Exact `vX.Y.Z` tags are annotated and never moved. The compatible `vX` Action tag advances only
+after the matching release passes validation.
+
 1. Update the changelog and version in `package.json` and `src/version.ts`.
 2. Run `npm run check`, `npm test`, `npm run build`, `npm run demo`, and `npm pack --dry-run`.
 3. Merge the reviewed release commit.
 4. Create and push the matching signed or annotated `vX.Y.Z` tag.
-5. The release workflow repeats validation, creates the package archive and checksums, and publishes
-   a non-prerelease GitHub release.
+5. The release workflow repeats validation, creates the package archive and checksums, publishes a
+   non-prerelease GitHub release, and advances the compatible `vX` Action tag.
 6. Install the archive in a clean directory and smoke-test both commands.
 
 The npm registry is not a supported distribution channel until ownership and provenance are
