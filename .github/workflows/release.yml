@@ -55,7 +55,7 @@ jobs:
           cd release
           sha256sum --check SHA256SUMS
           cd ..
-          npm install --global --prefix "$RUNNER_TEMP/maniflight" release/*.tgz
+          npm install --global --prefix "$RUNNER_TEMP/maniflight" ./release/*.tgz
           test "$("$RUNNER_TEMP/maniflight/bin/maniflight" --version)" = "${GITHUB_REF_NAME#v}"
           "$RUNNER_TEMP/maniflight/bin/maniflight" pr --help
           "$RUNNER_TEMP/maniflight/bin/maniflight" scan --help
