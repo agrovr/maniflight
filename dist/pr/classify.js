@@ -310,11 +310,18 @@ export function classifyPullRequestFlight(facts, observedAt) {
             }));
         }
         const decision = subject.reviewDecision?.toUpperCase() ?? null;
-        const latestReviews = new Map();
-        for (const review of facts.reviews)
-            latestReviews.set(review.user, review.state.toUpperCase());
-        const hasChangesRequested = [...latestReviews.values()].includes("CHANGES_REQUESTED");
-        const approvals = [...latestReviews.values()].filter((state) => state === "APPROVED").length;
+        const latestDecisiveReviews = new Map();
+        for (const review of facts.reviews) {
+            const state = review.state.toUpperCase();
+            if (state === "APPROVED" || state === "CHANGES_REQUESTED") {
+                latestDecisiveReviews.set(review.user, state);
+            }
+            else if (state === "DISMISSED") {
+                latestDecisiveReviews.delete(review.user);
+            }
+        }
+        const hasChangesRequested = [...latestDecisiveReviews.values()].includes("CHANGES_REQUESTED");
+        const approvals = [...latestDecisiveReviews.values()].filter((state) => state === "APPROVED").length;
         const requiredApprovals = facts.branchPolicy?.requiredApprovals;
         const reviewsComplete = facts.collection.find((source) => source.id === "reviews")?.status === "available";
         if (decision === null && hasChangesRequested) {

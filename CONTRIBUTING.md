@@ -48,8 +48,8 @@ Run a local scan against the repository:
 npm run scan -- . --output maniflight-report
 ```
 
-The current package is developed from source and is not advertised as an npm
-registry installation.
+For development, install dependencies from source. Supported end-user archives are published
+through GitHub Releases, not the npm registry.
 
 ## Make a focused change
 

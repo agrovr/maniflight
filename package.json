@@ -1,7 +1,7 @@
 {
   "name": "maniflight",
   "version": "1.0.0",
-  "description": "Read-only GitHub pull-request and repository diagnostics with explicit evidence.",
+  "description": "Read-only GitHub pull-request blocker analysis and repository diagnostics.",
   "type": "module",
   "private": true,
   "files": [

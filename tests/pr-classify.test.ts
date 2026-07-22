@@ -154,6 +154,79 @@ describe("pull request flight classification", () => {
     );
   });
 
+  it("keeps an approval active when a later REST review is informational", () => {
+    const report = classifyPullRequestFlight(
+      facts({
+        subject: { reviewDecision: null },
+        branchPolicy: { ...BASE_POLICY, requiredApprovals: 1 },
+        reviews: [
+          {
+            id: 20,
+            user: "reviewer",
+            state: "approved",
+            submittedAt: "2026-07-21T04:00:00.000Z",
+            url: BASE_SUBJECT.url,
+          },
+          {
+            id: 21,
+            user: "reviewer",
+            state: "commented",
+            submittedAt: OBSERVED_AT,
+            url: BASE_SUBJECT.url,
+          },
+        ],
+      }),
+      OBSERVED_AT,
+    );
+
+    expect(report.outcome).toMatchObject({ status: "unknown", nextActors: ["unknown"] });
+    expect(report.signals).toContainEqual(
+      expect.objectContaining({
+        id: "review/decision",
+        status: "unknown",
+        blocking: false,
+      }),
+    );
+    expect(report.signals).not.toContainEqual(
+      expect.objectContaining({ id: "review/decision", status: "blocked" }),
+    );
+  });
+
+  it("removes a REST approval when GitHub later dismisses it", () => {
+    const report = classifyPullRequestFlight(
+      facts({
+        subject: { reviewDecision: null },
+        branchPolicy: { ...BASE_POLICY, requiredApprovals: 1 },
+        reviews: [
+          {
+            id: 20,
+            user: "reviewer",
+            state: "approved",
+            submittedAt: "2026-07-21T04:00:00.000Z",
+            url: BASE_SUBJECT.url,
+          },
+          {
+            id: 21,
+            user: "reviewer",
+            state: "dismissed",
+            submittedAt: OBSERVED_AT,
+            url: BASE_SUBJECT.url,
+          },
+        ],
+      }),
+      OBSERVED_AT,
+    );
+
+    expect(report.outcome.status).toBe("blocked");
+    expect(report.signals).toContainEqual(
+      expect.objectContaining({
+        id: "review/decision",
+        status: "blocked",
+        actor: "reviewer",
+      }),
+    );
+  });
+
   it("does not infer a missing approval from partial review evidence", () => {
     const report = classifyPullRequestFlight(
       facts({

@@ -2,10 +2,6 @@
 
 Notable user-facing changes are recorded here.
 
-## Unreleased
-
-- No user-facing changes yet.
-
 ## 1.0.0 — 2026-07-21
 
 - Add the read-only PR Flight Director with terminal and JSON output.

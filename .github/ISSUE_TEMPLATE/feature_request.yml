@@ -42,7 +42,6 @@ body:
         - JSON output
         - Configuration
         - Documentation
-        - Future readiness pack
         - Other
     validations:
       required: true
