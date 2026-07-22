@@ -18,7 +18,7 @@ describe("GitHub metadata collection", () => {
           data: {
             name: "maniflight",
             html_url: "https://github.com/agrovr/maniflight",
-            description: "Repository preflight",
+            description: "Repository diagnostics",
             default_branch: "main",
             visibility: "public",
             topics: ["typescript", "github-actions"],

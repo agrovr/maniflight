@@ -1,4 +1,4 @@
-name: Maniflight repository preflight
+name: Maniflight repository diagnostics
 description: Generate an evidence-backed readiness report for a GitHub repository.
 author: Ashmit Grover
 

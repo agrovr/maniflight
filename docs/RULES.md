@@ -1,6 +1,6 @@
 # Rule catalog
 
-Maniflight v0.1 evaluates deterministic repository evidence across four
+Maniflight evaluates deterministic repository evidence across four
 domains. Rules inspect files and optional read-only GitHub metadata; they do not
 execute the target project's code.
 
@@ -28,11 +28,10 @@ repository-relative path, line, or read-only GitHub URL.
 See [SCORING.md](SCORING.md) for how status and weight affect score and
 confidence.
 
-## v0.1 rule metadata
+## Rule metadata
 
 Severity communicates review priority; weight controls numerical contribution.
-They are intentionally separate. These values are part of the v0.1 scoring
-contract.
+They are intentionally separate. These values are part of the 1.x scoring contract.
 
 | Rule ID | Severity | Weight |
 | --- | --- | ---: |
@@ -113,7 +112,7 @@ Looks for parseable GitHub Actions workflows that make repository automation
 visible and repeatable.
 
 **Limit:** a workflow file does not prove successful execution. Other CI
-providers are not fully represented by this GitHub-focused v0.1 rule.
+providers are not fully represented by this GitHub-focused rule.
 
 ### `automation/pr-validation`
 

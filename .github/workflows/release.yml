@@ -1,0 +1,83 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Verify tag and package version
+        env:
+          TAG_NAME: ${{ github.ref_name }}
+        run: |
+          [[ "$TAG_NAME" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]
+          test "$TAG_NAME" = "v$(node -p "require('./package.json').version")"
+          test "$(git cat-file -t "$TAG_NAME")" = "tag"
+          git merge-base --is-ancestor "$TAG_NAME^{commit}" origin/main
+
+      - name: Verify source
+        run: |
+          npm ci
+          npm run check
+          npm test
+          npm run build
+          npm run demo
+          git diff --exit-code -- dist demo
+          npm pack --dry-run
+
+      - name: Pack release archive
+        run: |
+          mkdir release
+          npm pack --pack-destination release
+          cd release
+          sha256sum *.tgz > SHA256SUMS
+
+      - name: Smoke-test release archive
+        run: |
+          cd release
+          sha256sum --check SHA256SUMS
+          cd ..
+          npm install --global --prefix "$RUNNER_TEMP/maniflight" release/*.tgz
+          test "$("$RUNNER_TEMP/maniflight/bin/maniflight" --version)" = "${GITHUB_REF_NAME#v}"
+          "$RUNNER_TEMP/maniflight/bin/maniflight" pr --help
+          "$RUNNER_TEMP/maniflight/bin/maniflight" scan --help
+          "$RUNNER_TEMP/maniflight/bin/maniflight" scan . --offline --output "$RUNNER_TEMP/release-smoke"
+          test -f "$RUNNER_TEMP/release-smoke/report.json"
+          test -f "$RUNNER_TEMP/release-smoke/report.html"
+          test -f "$RUNNER_TEMP/release-smoke/orbit.svg"
+
+      - name: Publish GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1; then
+            gh release upload "$GITHUB_REF_NAME" release/* --clobber
+          else
+            gh release create "$GITHUB_REF_NAME" release/* --verify-tag --generate-notes
+          fi
+
+      - name: Update stable major Action tag
+        env:
+          TAG_NAME: ${{ github.ref_name }}
+        run: |
+          MAJOR_TAG="${TAG_NAME%%.*}"
+          git tag --force "$MAJOR_TAG" "$TAG_NAME^{commit}"
+          git push --force origin "refs/tags/$MAJOR_TAG"

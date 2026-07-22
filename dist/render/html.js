@@ -125,7 +125,7 @@ function renderSummary(report) {
     <section class="summary" aria-labelledby="report-title">
       <div class="summary-copy">
         <p class="repository-path">${renderRepositoryPath(report)}</p>
-        <h1 id="report-title">Repository preflight</h1>
+        <h1 id="report-title">Repository diagnostics</h1>
         <p class="summary-text">${escapeHtml(reportSummary(report))}</p>
         ${renderPriorityLinks(report)}
       </div>
@@ -493,13 +493,13 @@ export function renderReportHtml(report, comparison) {
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="color-scheme" content="dark light" />
   <meta http-equiv="Content-Security-Policy" content="${escapeHtml(contentSecurityPolicy(styles, interaction))}" />
-  <title>${escapeHtml(repositoryName)} · Maniflight repository preflight</title>
+  <title>${escapeHtml(repositoryName)} · Maniflight repository diagnostics</title>
   <style>${styles}</style>
 </head>
 <body>
   <a class="skip-link" href="#main-content">Skip to report</a>
   <header class="topbar">
-    <p class="product-label">MANIFLIGHT / REPOSITORY PREFLIGHT</p>
+    <p class="product-label">MANIFLIGHT / REPOSITORY DIAGNOSTICS</p>
     <button class="theme-toggle" id="theme-toggle" type="button">Theme</button>
   </header>
   <main class="shell" id="main-content">

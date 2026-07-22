@@ -14,7 +14,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  preflight:
+  diagnostics:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -33,7 +33,7 @@ jobs:
           npm run build
 
       - name: Run Maniflight against itself
-        id: preflight
+        id: diagnostics
         uses: ./
         with:
           github-token: ${{ github.token }}
@@ -44,8 +44,8 @@ jobs:
 
       - name: Verify comparison outputs
         env:
-          COMPARISON_PATH: ${{ steps.preflight.outputs.comparison-path }}
-          REGRESSIONS: ${{ steps.preflight.outputs.regressions }}
+          COMPARISON_PATH: ${{ steps.diagnostics.outputs.comparison-path }}
+          REGRESSIONS: ${{ steps.diagnostics.outputs.regressions }}
         run: |
           test "$REGRESSIONS" = "0"
           test -f "$COMPARISON_PATH"

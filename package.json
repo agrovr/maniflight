@@ -1,11 +1,37 @@
 {
   "name": "maniflight",
-  "version": "0.2.0",
-  "description": "A read-only repository preflight for architecture, automation, security, and community readiness.",
+  "version": "1.0.0",
+  "description": "Read-only GitHub pull-request blocker analysis and repository diagnostics.",
   "type": "module",
   "private": true,
+  "files": [
+    "dist",
+    "action.yml",
+    "CHANGELOG.md",
+    "CODE_OF_CONDUCT.md",
+    "CONTRIBUTING.md",
+    "docs",
+    "LICENSE",
+    "README.md",
+    "ROADMAP.md",
+    "SECURITY.md",
+    "SUPPORT.md"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/agrovr/maniflight.git"
+  },
+  "homepage": "https://github.com/agrovr/maniflight#readme",
+  "bugs": "https://github.com/agrovr/maniflight/issues",
+  "keywords": [
+    "github",
+    "pull-request",
+    "github-actions",
+    "cli"
+  ],
   "engines": {
-    "node": ">=22"
+    "node": "^22.12.0 || ^24.0.0"
   },
   "bin": {
     "maniflight": "dist/cli.js"
