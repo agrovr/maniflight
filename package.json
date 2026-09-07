@@ -55,7 +55,7 @@
     "commander": "^15.0.0",
     "ignore": "^7.0.6",
     "yaml": "^2.9.0",
-    "zod": "^4.4.3"
+    "zod": "^4.5.4"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.5.4",
