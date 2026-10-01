@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { PullRequestFlightReport } from "../src/pr/model.js";
-import { renderPullRequestFlight } from "../src/pr/render.js";
+import { renderPullRequestFlight, shouldUseColor } from "../src/pr/render.js";
 
 function report(): PullRequestFlightReport {
   return {
@@ -79,7 +79,7 @@ function report(): PullRequestFlightReport {
       },
       {
         actor: "maintainer",
-        summary: "CI requires manual action",
+        summary: "Approve the pending fork workflow run so CI can start.",
         url: "https://github.com/rtk-ai/rtk/actions/runs/29800767510",
       },
     ],
@@ -112,6 +112,15 @@ describe("pull request terminal output", () => {
         line("SOURCE", "https://github.com/rtk-ai/rtk/pull/3114"),
         line("ACTION", "CI requires manual action"),
         line("SOURCE", "https://github.com/rtk-ai/rtk/actions/runs/29800767510"),
+        "",
+        "Next steps",
+        line(
+          "REVIEWER",
+          "Review and approve the pull request if it meets the project requirements.",
+        ),
+        line("", "https://github.com/rtk-ai/rtk/pull/3114"),
+        line("MAINTAINER", "Approve the pending fork workflow run so CI can start."),
+        line("", "https://github.com/rtk-ai/rtk/actions/runs/29800767510"),
       ].join("\n")}\n`,
     );
   });
@@ -177,5 +186,53 @@ describe("pull request terminal output", () => {
         );
       }),
     ).toEqual([]);
+  });
+
+  it("lists evidence gaps separately, after observed conditions", () => {
+    const gappy = report();
+    gappy.signals.unshift({
+      id: "collection/graphql",
+      status: "unknown",
+      actor: "unknown",
+      confidence: "unknown",
+      blocking: false,
+      summary: "graphql evidence is unavailable",
+      evidence: [],
+    });
+
+    const output = renderPullRequestFlight(gappy);
+    const gaps = output.indexOf("Evidence gaps");
+
+    expect(gaps).toBeGreaterThan(output.indexOf("BLOCKED      1 approving review"));
+    expect(output.indexOf("UNKNOWN      graphql evidence is unavailable")).toBeGreaterThan(gaps);
+    expect(output.indexOf("Next steps")).toBeGreaterThan(gaps);
+    expect(output).not.toContain("\n\n\n");
+  });
+
+  it("colors only Maniflight labels and keeps remote text sanitized", () => {
+    const hostile = report();
+    hostile.pullRequest.title = "Title\u001b[31mred";
+
+    const plain = renderPullRequestFlight(hostile);
+    const colored = renderPullRequestFlight(hostile, { color: true });
+
+    expect(plain).not.toContain("\u001b");
+    expect(colored).toContain("\u001b[31mBLOCKED");
+    expect(colored).toContain("Title [31mred");
+    // Removing the escape sequences yields the plain output exactly.
+    // biome-ignore lint/suspicious/noControlCharactersInRegex: matching ANSI escapes on purpose
+    expect(colored.replace(/\u001b\[[0-9;]*m/g, "")).toBe(plain);
+  });
+
+  it.each([
+    { tty: true, env: {}, expected: true },
+    { tty: false, env: {}, expected: false },
+    { tty: true, env: { NO_COLOR: "1" }, expected: false },
+    { tty: false, env: { FORCE_COLOR: "1" }, expected: true },
+    { tty: true, env: { FORCE_COLOR: "0" }, expected: true },
+    { tty: true, env: { TERM: "dumb" }, expected: false },
+    { tty: true, env: { NO_COLOR: "1", FORCE_COLOR: "1" }, expected: false },
+  ])("decides color for tty=$tty env=$env", ({ tty, env, expected }) => {
+    expect(shouldUseColor({ isTTY: tty }, env)).toBe(expected);
   });
 });

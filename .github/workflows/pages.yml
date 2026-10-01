@@ -35,8 +35,15 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: |
-          node dist/cli.js scan . --output _site --repository "${{ github.repository }}" --baseline-report demo/baseline-report.json
-          cp _site/report.html _site/index.html
+          node dist/cli.js scan . --output _site/scan --repository "${{ github.repository }}" --baseline-report demo/baseline-report.json
+          cp _site/scan/report.html _site/scan/index.html
+
+      - name: Add landing page
+        run: |
+          npx tsx scripts/generate-showcase.ts
+          cp demo/landing.html _site/index.html
+          mkdir -p _site/assets
+          cp docs/assets/maniflight-mission-light.svg docs/assets/maniflight-mission-dark.svg _site/assets/
 
       - name: Configure Pages
         uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0
