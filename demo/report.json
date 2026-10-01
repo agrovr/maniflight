@@ -2,7 +2,7 @@
   "schemaVersion": "1.0",
   "tool": {
     "name": "Maniflight",
-    "version": "1.0.0"
+    "version": "1.1.0"
   },
   "repository": {
     "name": "Maniflight",
@@ -200,7 +200,7 @@
           "evidence": [
             {
               "kind": "present",
-              "message": "6 of 6 job(s) declare timeout-minutes"
+              "message": "7 of 7 job(s) declare timeout-minutes"
             }
           ],
           "remediation": "Set timeout-minutes on every workflow job to bound stalled runs."
@@ -367,6 +367,21 @@
               "kind": "present",
               "message": "Immutable reference",
               "path": ".github/workflows/pages.yml"
+            },
+            {
+              "kind": "present",
+              "message": "Immutable reference",
+              "path": ".github/workflows/release.yml"
+            },
+            {
+              "kind": "present",
+              "message": "Immutable reference",
+              "path": ".github/workflows/release.yml"
+            },
+            {
+              "kind": "present",
+              "message": "Immutable reference",
+              "path": ".github/workflows/release.yml"
             },
             {
               "kind": "present",

@@ -1,9 +1,8 @@
 {
   "name": "maniflight",
-  "version": "1.0.0",
-  "description": "Read-only GitHub pull-request blocker analysis and repository diagnostics.",
+  "version": "1.1.0",
+  "description": "Read-only GitHub pull-request diagnostics: why a PR is blocked, what evidence is missing, and who has to move next.",
   "type": "module",
-  "private": true,
   "files": [
     "dist",
     "action.yml",
@@ -18,20 +17,30 @@
     "SUPPORT.md"
   ],
   "license": "MIT",
+  "author": "Ashmit Grover",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/agrovr/maniflight.git"
   },
-  "homepage": "https://github.com/agrovr/maniflight#readme",
+  "homepage": "https://agrovr.github.io/maniflight/",
   "bugs": "https://github.com/agrovr/maniflight/issues",
   "keywords": [
     "github",
     "pull-request",
+    "code-review",
+    "ci",
+    "merge",
+    "branch-protection",
     "github-actions",
-    "cli"
+    "diagnostics",
+    "cli",
+    "devtools"
   ],
   "engines": {
     "node": "^22.12.0 || ^24.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "bin": {
     "maniflight": "dist/cli.js"

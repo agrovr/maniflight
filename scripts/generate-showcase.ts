@@ -274,8 +274,8 @@ ${terminalHtml(scenario.report)}</pre>
       "Not in 1.x. Maniflight targets GitHub.com's REST and GraphQL APIs.",
     ],
     [
-      "Is it on the npm registry?",
-      "Not yet. Install from the GitHub release archive. Registry publishing is planned once package ownership and provenance are verified.",
+      "How do I know the npm package came from this repository?",
+      "Every release is published by the repository's own release workflow with npm trusted publishing, so each version carries a provenance attestation that links it to the exact commit and workflow run. Run <code>npm audit signatures</code> after installing to verify it.",
     ],
   ];
   const faqHtml = faq
@@ -501,7 +501,7 @@ footer a { color: var(--muted); }
         <p class="lede">Maniflight reads every place GitHub hides a merge blocker, separates what it observed from what it could not see, and tells each person what to do next. It never writes to GitHub.</p>
       </div>
       <div class="cta">
-        <a class="btn primary" href="#install">Install v${VERSION}</a>
+        <a class="btn primary" href="#install">npm install -g maniflight</a>
         <a class="btn" href="#try">Build a command</a>
       </div>
     </div>
@@ -576,16 +576,20 @@ footer a { color: var(--muted); }
     <div class="wrap">
       <div class="section-head">
         <div><p class="eyebrow">Install</p><h2>Ready for boarding</h2></div>
-        <p>Node.js 22.12+ or 24 on Windows, macOS, or Linux. Maniflight ships as a GitHub release archive.</p>
+        <p>Node.js 22.12+ or 24 on Windows, macOS, or Linux. Published to npm with provenance, and attached to every GitHub release.</p>
       </div>
       <div class="two">
         <div class="panel">
           <div class="tabs" role="group" aria-label="Install method">
-            <button type="button" class="switch" data-install="release" aria-pressed="true">Release</button>
+            <button type="button" class="switch" data-install="npm" aria-pressed="true">npm</button>
+            <button type="button" class="switch" data-install="npx" aria-pressed="false">npx</button>
+            <button type="button" class="switch" data-install="release" aria-pressed="false">Release archive</button>
             <button type="button" class="switch" data-install="source" aria-pressed="false">From source</button>
           </div>
-          <pre class="code" id="install-release">npm install --global ${RELEASE_URL}
+          <pre class="code" id="install-npm">npm install --global maniflight
 maniflight --version</pre>
+          <pre class="code" id="install-npx" hidden>npx maniflight pr owner/repository#123</pre>
+          <pre class="code" id="install-release" hidden>npm install --global ${RELEASE_URL}</pre>
           <pre class="code" id="install-source" hidden>git clone ${REPO_URL}.git
 cd maniflight
 npm ci
@@ -703,13 +707,14 @@ node dist/cli.js --help</pre>
 
   // Install method switch.
   var copyInstall = document.getElementById("copy-install");
-  copyInstall.setAttribute("data-copy-from", "install-release");
+  copyInstall.setAttribute("data-copy-from", "install-npm");
   document.querySelectorAll("[data-install]").forEach(function (button) {
     button.addEventListener("click", function () {
       var which = button.getAttribute("data-install");
-      document.querySelectorAll("[data-install]").forEach(function (b) { b.setAttribute("aria-pressed", String(b === button)); });
-      document.getElementById("install-release").hidden = which !== "release";
-      document.getElementById("install-source").hidden = which !== "source";
+      document.querySelectorAll("[data-install]").forEach(function (b) {
+        b.setAttribute("aria-pressed", String(b === button));
+        document.getElementById("install-" + b.getAttribute("data-install")).hidden = b !== button;
+      });
       copyInstall.setAttribute("data-copy-from", "install-" + which);
     });
   });

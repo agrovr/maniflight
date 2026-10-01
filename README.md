@@ -4,7 +4,7 @@
 
 <p align="center">
   <a href="https://github.com/agrovr/maniflight/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/agrovr/maniflight/actions/workflows/ci.yml/badge.svg?branch=main"></a>
-  <a href="https://github.com/agrovr/maniflight/releases/latest"><img alt="Release v1.0.0" src="demo/readme/badge-release.svg"></a>
+  <a href="https://www.npmjs.com/package/maniflight"><img alt="npm v1.1.0" src="demo/readme/badge-release.svg"></a>
   <img alt="Node.js 22.12+ or 24" src="demo/readme/badge-node.svg">
   <a href="LICENSE"><img alt="MIT license" src="demo/readme/badge-license.svg"></a>
   <a href="#trust-and-safety"><img alt="Read-only GitHub access" src="demo/readme/badge-readonly.svg"></a>
@@ -70,18 +70,35 @@ inspects.
 
 ## Install
 
-Maniflight is distributed as a GitHub release archive. It needs Node.js 22.12+ (22.x) or Node.js 24
-on Windows, macOS, or Linux.
+Maniflight needs Node.js 22.12+ (22.x) or Node.js 24 on Windows, macOS, or Linux.
 
 ```bash
-npm install --global https://github.com/agrovr/maniflight/releases/download/v1.0.0/maniflight-1.0.0.tgz
+npm install --global maniflight
 maniflight --version
 ```
 
+Or run it once without installing:
+
+```bash
+npx maniflight pr owner/repository#123
+```
+
+Every npm release is published from this repository's release workflow with a
+[provenance attestation](https://docs.npmjs.com/generating-provenance-statements). Check it with
+`npm audit signatures`.
+
 <details>
-<summary><b>Build from source</b></summary>
+<summary><b>Other ways to install</b></summary>
 
 <br>
+
+**From a GitHub release archive** (identical package, with `SHA256SUMS`):
+
+```bash
+npm install --global https://github.com/agrovr/maniflight/releases/download/v1.1.0/maniflight-1.1.0.tgz
+```
+
+**From source:**
 
 ```bash
 git clone https://github.com/agrovr/maniflight.git
@@ -92,10 +109,6 @@ node dist/cli.js --help
 ```
 
 </details>
-
-> [!NOTE]
-> Maniflight is not published to the npm registry yet, so `npx maniflight` is not a supported way to
-> run it. Install from the release archive above.
 
 ## Usage
 
