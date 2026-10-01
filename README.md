@@ -83,9 +83,9 @@ Or run it once without installing:
 npx maniflight pr owner/repository#123
 ```
 
-Every npm release is published from this repository's release workflow with a
-[provenance attestation](https://docs.npmjs.com/generating-provenance-statements). Check it with
-`npm audit signatures`.
+Releases after 1.1.0 are published by this repository's release workflow with a
+[provenance attestation](https://docs.npmjs.com/generating-provenance-statements) that links each
+version to its commit and workflow run. Check it with `npm audit signatures`.
 
 <details>
 <summary><b>Other ways to install</b></summary>
