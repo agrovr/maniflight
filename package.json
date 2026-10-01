@@ -1,6 +1,6 @@
 {
   "name": "maniflight",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Read-only GitHub pull-request diagnostics: why a PR is blocked, what evidence is missing, and who has to move next.",
   "type": "module",
   "files": [
@@ -62,16 +62,16 @@
     "@actions/github": "^9.1.1",
     "@octokit/rest": "^22.0.1",
     "commander": "^15.0.0",
-    "ignore": "^7.0.6",
+    "ignore": "^7.0.8",
     "yaml": "^2.9.0",
-    "zod": "^4.4.3"
+    "zod": "^4.5.4"
   },
   "devDependencies": {
-    "@biomejs/biome": "^2.5.4",
+    "@biomejs/biome": "^2.5.14",
     "@types/node": "^24.0.0",
     "@vercel/ncc": "^0.38.4",
-    "tsx": "^4.23.1",
+    "tsx": "^4.23.15",
     "typescript": "^6.0.0",
-    "vitest": "^4.1.10"
+    "vitest": "^4.1.11"
   }
 }

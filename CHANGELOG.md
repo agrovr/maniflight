@@ -2,6 +2,14 @@
 
 Notable user-facing changes are recorded here.
 
+## 1.1.1 — 2026-09-30
+
+- Update `undici` to 6.29.0 for GHSA advisories on retry-interceptor response desynchronization
+  and CRLF injection. The GitHub Action bundle is rebuilt with the patched version.
+- Refresh dependencies within their existing ranges (`zod`, `ignore`, `yaml`, Biome, Vitest, tsx,
+  `@types/node`) and pinned Actions (`checkout` 7.0.1, CodeQL 4.37.9, `deploy-pages` 5.0.1).
+- First release published to npm by the release workflow with a provenance attestation.
+
 ## 1.1.0 — 2026-09-30
 
 - Publish Maniflight to the npm registry as `maniflight`, with provenance. `npm install --global

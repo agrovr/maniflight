@@ -4,7 +4,7 @@
 
 <p align="center">
   <a href="https://github.com/agrovr/maniflight/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/agrovr/maniflight/actions/workflows/ci.yml/badge.svg?branch=main"></a>
-  <a href="https://www.npmjs.com/package/maniflight"><img alt="npm v1.1.0" src="demo/readme/badge-release.svg"></a>
+  <a href="https://www.npmjs.com/package/maniflight"><img alt="npm v1.1.1" src="demo/readme/badge-release.svg"></a>
   <img alt="Node.js 22.12+ or 24" src="demo/readme/badge-node.svg">
   <a href="LICENSE"><img alt="MIT license" src="demo/readme/badge-license.svg"></a>
   <a href="#trust-and-safety"><img alt="Read-only GitHub access" src="demo/readme/badge-readonly.svg"></a>
@@ -95,7 +95,7 @@ version to its commit and workflow run. Check it with `npm audit signatures`.
 **From a GitHub release archive** (identical package, with `SHA256SUMS`):
 
 ```bash
-npm install --global https://github.com/agrovr/maniflight/releases/download/v1.1.0/maniflight-1.1.0.tgz
+npm install --global https://github.com/agrovr/maniflight/releases/download/v1.1.1/maniflight-1.1.1.tgz
 ```
 
 **From source:**
@@ -202,7 +202,7 @@ jobs:
   maniflight:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: agrovr/maniflight@v1
         with:
           github-token: ${{ github.token }}
