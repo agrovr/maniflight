@@ -47,6 +47,9 @@ export async function collectGitHub(repository, options = {}) {
     const client = options.client ??
         new Octokit({
             ...(options.token ? { auth: options.token } : {}),
+            // Octokit logs failed requests to the console by default; Maniflight reports
+            // failures itself, so its own logger stays silent.
+            log: { debug() { }, info() { }, warn() { }, error() { } },
             userAgent: `maniflight/${VERSION}`,
             request: {
                 headers: {

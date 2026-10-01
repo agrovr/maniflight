@@ -42,7 +42,7 @@
     "build:ts": "tsc -p tsconfig.build.json",
     "bundle:action": "ncc build src/action.ts -o dist/action --minify",
     "check": "biome check . && tsc -p tsconfig.json --noEmit",
-    "demo": "tsx scripts/generate-demo.ts",
+    "demo": "tsx scripts/generate-demo.ts && tsx scripts/generate-showcase.ts",
     "format": "biome check --write .",
     "scan": "tsx src/cli.ts scan",
     "test": "vitest run",

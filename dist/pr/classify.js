@@ -204,6 +204,29 @@ function outcomeSummary(status, subject) {
     };
     return summaries[status];
 }
+// Turn a check, status, or workflow signal into an instruction instead of repeating the
+// observation. Wording stays neutral when the actor is only inferred or unknown.
+function fallbackActionSummary(value) {
+    const kind = value.id.split("/")[0];
+    if (value.status === "waiting") {
+        return "Wait for pending automation to report a result, then inspect again.";
+    }
+    if (kind === "workflow" && value.status === "action_required") {
+        return value.actor === "maintainer"
+            ? "Approve the pending fork workflow run so CI can start."
+            : "Open the workflow run and complete the manual step GitHub is waiting for.";
+    }
+    if (kind === "check" && value.summary.endsWith("requires manual action")) {
+        return "Open the check and complete the manual step it is waiting for.";
+    }
+    if ((kind === "check" || kind === "status") && value.actor === "contributor") {
+        return "Complete the sign-off this provider requires, then ask it to check again.";
+    }
+    if (kind === "check" || kind === "status") {
+        return "Inspect the failing result, fix the cause, and push a new commit.";
+    }
+    return value.summary;
+}
 function actionForSignal(value) {
     if (value.status === "pass" || value.status === "info")
         return null;
@@ -223,7 +246,7 @@ function actionForSignal(value) {
     };
     return {
         actor: value.actor,
-        summary: summaries[value.id] ?? value.summary,
+        summary: summaries[value.id] ?? fallbackActionSummary(value),
         ...(value.evidence[0] ? { url: value.evidence[0].url } : {}),
     };
 }

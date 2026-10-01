@@ -275,6 +275,11 @@ describe("pull request flight classification", () => {
         blocking: true,
       }),
     );
+    expect(report.nextActions).toContainEqual({
+      actor: "unknown",
+      summary: "Open the check and complete the manual step it is waiting for.",
+      url: "https://github.com/example/project/actions/runs/13",
+    });
   });
 
   it("blocks an unresolved review thread only when active policy requires resolution", () => {
@@ -602,6 +607,11 @@ describe("pull request flight classification", () => {
         blocking: false,
       }),
     );
+    expect(report.nextActions).toContainEqual({
+      actor: "unknown",
+      summary: "Inspect the failing result, fix the cause, and push a new commit.",
+      url: "https://github.com/example/project/actions/runs/12",
+    });
   });
 
   it.each([

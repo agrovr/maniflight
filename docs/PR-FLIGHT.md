@@ -22,7 +22,13 @@ Missing evidence never becomes a silent pass.
 
 ## Output
 
-Human-readable output carries meaning without color. `--json` writes exactly one JSON document:
+Human-readable output carries meaning without color. Observed conditions come first, followed by
+**Evidence gaps** for anything reported as `unknown`, then **Next steps** with one row per actor.
+Actions without a reliable owner are shown as `UNASSIGNED`.
+
+Color is added only for interactive terminals and only to Maniflight's own labels. Use `--no-color`
+or set `NO_COLOR` to disable it; `FORCE_COLOR` enables it for pipes. `--json` writes exactly one
+JSON document:
 
 ```bash
 maniflight pr owner/repository#123 --json > flight.json

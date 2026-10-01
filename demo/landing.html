@@ -1,0 +1,371 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Maniflight</title>
+<meta name="description" content="Read-only GitHub pull-request diagnostics: why a PR is blocked, what evidence is missing, and who can act next.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: one column of flight-deck panels; the tabbed terminal is the hero's proof. */
+:root {
+  --bg: #0f0a17;
+  --panel: #171020;
+  --raised: #1e1629;
+  --ink: #f2ecf8;
+  --muted: #a99abf;
+  --line: #2e2340;
+  --plum: #b895dc;
+  --flare: #f2a45b;
+  --term-bg: #140e1d;
+  --t-base: #e9e2f2; --t-red: #ff8a8a; --t-green: #86d6a6; --t-yellow: #f6c76b; --t-magenta: #df9be6; --t-cyan: #7fd0e0; --t-dim: #8f82a3;
+  --display: "IBM Plex Sans Condensed", "Arial Narrow", system-ui, sans-serif;
+  --body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  color-scheme: dark;
+}
+@media (prefers-color-scheme: light) {
+  :root {
+    --bg: #f8f4ec; --panel: #fffdf9; --raised: #f1eadf; --ink: #241933; --muted: #6b5c7e; --line: #e2d8ca;
+    --plum: #6f4e93; --flare: #c96d24; color-scheme: light;
+  }
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.6 var(--body); }
+a { color: inherit; text-decoration-color: color-mix(in srgb, var(--plum) 60%, transparent); text-underline-offset: 3px; }
+a:hover { text-decoration-color: var(--flare); }
+:focus-visible { outline: 2px solid var(--flare); outline-offset: 3px; border-radius: 4px; }
+.wrap { max-width: 1080px; margin: 0 auto; padding-inline: 20px; }
+header.bar { border-bottom: 1px solid var(--line); }
+header.bar .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-block: 14px; flex-wrap: wrap; }
+.mark { font: 600 0.95rem/1 var(--mono); letter-spacing: 0.14em; text-transform: uppercase; text-decoration: none; display: inline-flex; align-items: center; gap: 10px; }
+.mark i { width: 10px; height: 10px; border-radius: 50%; background: var(--flare); box-shadow: 0 0 0 4px color-mix(in srgb, var(--flare) 22%, transparent); }
+nav { display: flex; gap: 20px; font-size: 0.92rem; color: var(--muted); flex-wrap: wrap; }
+nav a { text-decoration: none; }
+nav a:hover { color: var(--ink); }
+
+.hero { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 48px; padding-block: 64px 56px; align-items: start; }
+.eyebrow { font: 500 0.75rem/1.4 var(--mono); letter-spacing: 0.14em; text-transform: uppercase; color: var(--plum); margin: 0 0 14px; }
+h1 { font: 700 clamp(2.4rem, 5.2vw, 3.6rem)/1.02 var(--display); letter-spacing: -0.01em; margin: 0 0 20px; text-wrap: balance; }
+h1 em { font-style: normal; color: var(--flare); }
+.lede { font-size: 1.08rem; color: var(--muted); margin: 0 0 28px; max-width: 34rem; }
+.install { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; display: grid; gap: 10px; }
+.install label { font: 500 0.72rem/1 var(--mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+.install .row { display: flex; gap: 10px; align-items: center; min-width: 0; }
+.install code { flex: 1; min-width: 0; overflow-x: auto; white-space: nowrap; font: 0.82rem/1.5 var(--mono); padding-block: 4px; scrollbar-width: thin; }
+button.copy { font: 600 0.8rem/1 var(--body); background: var(--flare); color: #1a1008; border: 0; border-radius: 999px; padding: 9px 14px; cursor: pointer; flex: none; }
+.facts { display: flex; flex-wrap: wrap; gap: 8px 18px; margin: 18px 0 0; padding: 0; list-style: none; font: 0.8rem/1.4 var(--mono); color: var(--muted); }
+.facts li::before { content: "◆ "; color: var(--plum); }
+
+.demo { background: var(--term-bg); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; min-width: 0; }
+.demo [role="tablist"] { display: flex; gap: 4px; padding: 10px 10px 0; overflow-x: auto; border-bottom: 1px solid #2c2140; }
+.demo [role="tab"] { font: 500 0.82rem/1 var(--mono); color: #a99abf; background: none; border: 0; border-bottom: 2px solid transparent; padding: 10px 12px 12px; cursor: pointer; white-space: nowrap; }
+.demo [role="tab"][aria-selected="true"] { color: #f2ecf8; border-bottom-color: #f2a45b; }
+.caption { margin: 0; padding: 14px 18px 0; font-size: 0.86rem; color: #b9abcf; }
+.term { margin: 0; padding: 14px 18px 20px; font: 0.8rem/1.6 var(--mono); color: var(--t-base); overflow-x: auto; }
+.t-red { color: var(--t-red); } .t-green { color: var(--t-green); } .t-yellow { color: var(--t-yellow); }
+.t-magenta { color: var(--t-magenta); } .t-cyan { color: var(--t-cyan); } .t-dim { color: var(--t-dim); } .t-bold { font-weight: 600; color: #fff; }
+.t-bold.t-red, .t-bold.t-green { color: inherit; }
+.sample { font: 0.72rem/1.4 var(--mono); color: #8f82a3; padding: 0 18px 14px; margin: 0; }
+
+section.block { border-top: 1px solid var(--line); padding-block: 56px; }
+h2 { font: 600 clamp(1.6rem, 3vw, 2.1rem)/1.1 var(--display); margin: 0 0 12px; text-wrap: balance; }
+.intro { color: var(--muted); max-width: 40rem; margin: 0 0 32px; }
+.flight { display: block; width: 100%; height: auto; border-radius: 12px; border: 1px solid var(--line); }
+
+.split { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 40px; }
+table { width: 100%; border-collapse: collapse; font-size: 0.92rem; }
+th, td { text-align: left; padding: 10px 12px 10px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font: 500 0.72rem/1.4 var(--mono); letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+td:first-child { white-space: nowrap; }
+.chip { font: 600 0.74rem/1 var(--mono); padding: 4px 8px; border-radius: 4px; background: var(--raised); display: inline-block; }
+.c-pass { color: var(--t-green); } .c-blocked { color: var(--t-red); } .c-action { color: var(--t-yellow); }
+.c-waiting { color: var(--t-cyan); } .c-unknown { color: var(--t-magenta); } .c-info { color: var(--muted); }
+@media (prefers-color-scheme: light) {
+  .c-pass { color: #2f7d53; } .c-blocked { color: #b4383b; } .c-action { color: #8a5a00; } .c-waiting { color: #1f6f80; } .c-unknown { color: #8d3d96; }
+}
+.never { list-style: none; padding: 0; margin: 0; display: grid; gap: 14px; }
+.never li { padding-left: 22px; position: relative; }
+.never li::before { content: ""; position: absolute; left: 0; top: 0.62em; width: 10px; height: 2px; background: var(--flare); }
+pre.code { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 16px; font: 0.8rem/1.6 var(--mono); overflow-x: auto; margin: 0; }
+.cta { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 24px; }
+.btn { font: 600 0.9rem/1 var(--body); padding: 12px 18px; border-radius: 999px; text-decoration: none; border: 1px solid var(--line); }
+.btn.primary { background: var(--flare); color: #1a1008; border-color: transparent; }
+footer { border-top: 1px solid var(--line); padding-block: 28px; color: var(--muted); font: 0.8rem/1.5 var(--mono); }
+footer .wrap { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+
+@media (max-width: 900px) {
+  .hero { grid-template-columns: minmax(0, 1fr); gap: 32px; padding-block: 40px; }
+  .split { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 520px) {
+  .wrap { padding-inline: 16px; }
+  nav { gap: 14px; }
+  .term { font-size: 0.72rem; }
+}
+</style>
+</head>
+<body>
+<header class="bar">
+  <div class="wrap">
+    <a class="mark" href="./"><i aria-hidden="true"></i>Maniflight</a>
+    <nav aria-label="Primary">
+      <a href="#how">How it works</a>
+      <a href="#trust">Trust</a>
+      <a href="./scan/">Self-scan</a>
+      <a href="https://github.com/agrovr/maniflight">GitHub</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <div class="wrap hero">
+    <div>
+      <p class="eyebrow">PR Flight Director · v1.0.0</p>
+      <h1>Why is this pull request <em>blocked</em>?</h1>
+      <p class="lede">Maniflight reads every place GitHub hides a merge blocker, separates what it observed from what it could not see, and tells you who has to move next. It never writes to GitHub.</p>
+      <div class="install">
+        <label for="install-cmd">Install from the v1.0.0 release</label>
+        <div class="row">
+          <code id="install-cmd">npm install --global https://github.com/agrovr/maniflight/releases/download/v1.0.0/maniflight-1.0.0.tgz</code>
+          <button type="button" class="copy" data-copy="install-cmd">Copy</button>
+        </div>
+      </div>
+      <ul class="facts">
+        <li>Node.js 22.12+ or 24</li>
+        <li>Windows · macOS · Linux</li>
+        <li>MIT</li>
+      </ul>
+    </div>
+
+    <div class="demo">
+      <div role="tablist" aria-label="Sample pull requests">
+          <button type="button" role="tab" id="tab-fork" aria-controls="panel-fork" aria-selected="true" tabindex="0">Fork PR</button>
+          <button type="button" role="tab" id="tab-failing" aria-controls="panel-failing" aria-selected="false" tabindex="-1">Failing check</button>
+          <button type="button" role="tab" id="tab-unknown" aria-controls="panel-unknown" aria-selected="false" tabindex="-1">Evidence gap</button>
+          <button type="button" role="tab" id="tab-ready" aria-controls="panel-ready" aria-selected="false" tabindex="-1">Ready</button>
+      </div>
+        <div class="panel" role="tabpanel" id="panel-fork" aria-labelledby="tab-fork">
+          <p class="caption">A first-time contributor's fork: CI is parked until a maintainer approves it, and a review is still required.</p>
+          <pre class="term" tabindex="0"><span class="t-dim">$</span> maniflight pr acme/payments-api#231
+
+<span class="t-bold">Maniflight PR Flight Director</span>
+acme/payments-api#231
+Document the refund webhook payload
+
+STATUS       <span class="t-red">BLOCKED</span>
+NEXT ACTORS  reviewer, maintainer, automation
+HEAD         e19a7c3f40b2
+
+<span class="t-red">BLOCKED      </span>1 approving review is required [merge blocker]
+<span class="t-dim">SOURCE       </span><span class="t-dim">https://github.com/acme/payments-api/pull/231</span>
+<span class="t-yellow">ACTION       </span>CI requires manual action
+DETAIL       GitHub reports manual action required for this fork workflow, and the run has no jobs. A maintainer with write access is the likely next actor.
+<span class="t-dim">SOURCE       </span><span class="t-dim">https://github.com/acme/payments-api/actions/runs/9177</span>
+<span class="t-cyan">WAITING      </span>build is required but has not reported a result [merge blocker]
+<span class="t-dim">SOURCE       </span><span class="t-dim">https://github.com/acme/payments-api/pull/231</span>
+
+<span class="t-bold">Next steps</span>
+<span class="t-bold">REVIEWER     </span>Review and approve the pull request if it meets the project requirements.
+             <span class="t-dim">https://github.com/acme/payments-api/pull/231</span>
+<span class="t-bold">MAINTAINER   </span>Approve the pending fork workflow run so CI can start.
+             <span class="t-dim">https://github.com/acme/payments-api/actions/runs/9177</span>
+<span class="t-bold">AUTOMATION   </span>Wait for pending automation to report a result, then inspect again.
+             <span class="t-dim">https://github.com/acme/payments-api/pull/231</span></pre>
+        </div>
+        <div class="panel" role="tabpanel" id="panel-failing" aria-labelledby="tab-failing" hidden>
+          <p class="caption">Approved, but a required check failed and a review thread is still open.</p>
+          <pre class="term" tabindex="0"><span class="t-dim">$</span> maniflight pr acme/payments-api#218
+
+<span class="t-bold">Maniflight PR Flight Director</span>
+acme/payments-api#218
+Retry idempotent webhook deliveries
+
+STATUS       <span class="t-red">BLOCKED</span>
+NEXT ACTORS  contributor
+HEAD         7c41e09b2d5f
+
+<span class="t-red">BLOCKED      </span>build failure [merge blocker]
+DETAIL       This check matches an active required status context.
+<span class="t-dim">SOURCE       </span><span class="t-dim">https://github.com/acme/payments-api/actions/runs/9101</span>
+<span class="t-red">BLOCKED      </span>1 review thread is unresolved [merge blocker]
+<span class="t-dim">SOURCE       </span><span class="t-dim">https://github.com/acme/payments-api/pull/218</span>
+
+<span class="t-bold">Next steps</span>
+<span class="t-bold">UNASSIGNED   </span>Inspect the failing result, fix the cause, and push a new commit.
+             <span class="t-dim">https://github.com/acme/payments-api/actions/runs/9101</span>
+<span class="t-bold">CONTRIBUTOR  </span>Resolve the required review conversations.
+             <span class="t-dim">https://github.com/acme/payments-api/pull/218</span></pre>
+        </div>
+        <div class="panel" role="tabpanel" id="panel-unknown" aria-labelledby="tab-unknown" hidden>
+          <p class="caption">Run without a token: GitHub hides review data, so Maniflight says what it cannot see instead of guessing.</p>
+          <pre class="term" tabindex="0"><span class="t-dim">$</span> maniflight pr acme/payments-api#218
+
+<span class="t-bold">Maniflight PR Flight Director</span>
+acme/payments-api#218
+Retry idempotent webhook deliveries
+
+STATUS       <span class="t-red">BLOCKED</span>
+NEXT ACTORS  reviewer, automation
+HEAD         7c41e09b2d5f
+
+<span class="t-red">BLOCKED      </span>1 approving review is required [merge blocker]
+<span class="t-dim">SOURCE       </span><span class="t-dim">https://github.com/acme/payments-api/pull/218</span>
+<span class="t-cyan">WAITING      </span>build is in progress [merge blocker]
+DETAIL       This check matches an active required status context.
+<span class="t-dim">SOURCE       </span><span class="t-dim">https://github.com/acme/payments-api/actions/runs/9101</span>
+
+<span class="t-bold">Evidence gaps</span>
+<span class="t-magenta">UNKNOWN      </span>graphql evidence is unavailable
+DETAIL       GitHub GraphQL requires authentication.
+<span class="t-magenta">UNKNOWN      </span>Review thread evidence was incomplete
+<span class="t-dim">SOURCE       </span><span class="t-dim">https://github.com/acme/payments-api/pull/218</span>
+
+<span class="t-bold">Next steps</span>
+<span class="t-bold">REVIEWER     </span>Review and approve the pull request if it meets the project requirements.
+             <span class="t-dim">https://github.com/acme/payments-api/pull/218</span>
+<span class="t-bold">AUTOMATION   </span>Wait for pending automation to report a result, then inspect again.
+             <span class="t-dim">https://github.com/acme/payments-api/actions/runs/9101</span></pre>
+        </div>
+        <div class="panel" role="tabpanel" id="panel-ready" aria-labelledby="tab-ready" hidden>
+          <p class="caption">Everything required has reported success. Nothing left to chase.</p>
+          <pre class="term" tabindex="0"><span class="t-dim">$</span> maniflight pr acme/payments-api#218
+
+<span class="t-bold">Maniflight PR Flight Director</span>
+acme/payments-api#218
+Retry idempotent webhook deliveries
+
+STATUS       <span class="t-green">READY</span>
+NEXT ACTORS  none
+HEAD         7c41e09b2d5f
+
+<span class="t-green">PASS         </span>No observed blocker remains in the collected evidence.
+<span class="t-dim">SOURCE       </span><span class="t-dim">https://github.com/acme/payments-api/pull/218</span></pre>
+        </div>
+      <p class="sample">Sample pull requests, classified and rendered by Maniflight 1.0.0.</p>
+    </div>
+  </div>
+
+  <section class="block" id="how">
+    <div class="wrap">
+      <p class="eyebrow">How it works</p>
+      <h2>Seven GitHub sources, one flight plan</h2>
+      <p class="intro">No single GitHub response explains a stuck pull request. Maniflight combines the pull request, GraphQL review state, reviews, check runs, commit statuses, hidden Actions runs, and active branch rules, then splits the result into observed blockers and evidence gaps before naming the next actor.</p>
+      <picture>
+        <source media="(prefers-color-scheme: light)" srcset="assets/maniflight-mission-light.svg">
+        <img class="flight" src="assets/maniflight-mission-dark.svg" alt="Flight path: a pull request enters a read-only evidence scan, splits into observed blockers and evidence gaps, and converges on the next actor" width="920" height="350">
+      </picture>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="wrap split">
+      <div>
+        <p class="eyebrow">Statuses</p>
+        <h2>Every condition gets an honest label</h2>
+        <table>
+          <thead><tr><th scope="col">Status</th><th scope="col">Meaning</th></tr></thead>
+          <tbody>
+            <tr><td><span class="chip c-blocked">BLOCKED</span></td><td>Evidence identifies a current merge blocker.</td></tr>
+            <tr><td><span class="chip c-action">ACTION</span></td><td>A person must act before progress can continue.</td></tr>
+            <tr><td><span class="chip c-waiting">WAITING</span></td><td>Automation or another pending condition is not complete.</td></tr>
+            <tr><td><span class="chip c-unknown">UNKNOWN</span></td><td>The available evidence cannot support a stronger conclusion.</td></tr>
+            <tr><td><span class="chip c-pass">PASS</span></td><td>The observed condition completed successfully.</td></tr>
+            <tr><td><span class="chip c-info">INFO</span></td><td>Relevant, but not known to block the merge.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div>
+        <p class="eyebrow">Automation</p>
+        <h2>One JSON document for your tooling</h2>
+        <p class="intro">Add <code>--json</code> for a schema-versioned report with signals, evidence links, next actions, and per-source coverage.</p>
+<pre class="code">maniflight pr acme/payments-api#218 --json
+
+kind           pull-request-flight
+schemaVersion  1.0
+outcome        status, next actors, summary
+signals        conditions with evidence links
+nextActions    who should do what next
+collection     source coverage and warnings</pre>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="trust">
+    <div class="wrap split">
+      <div>
+        <p class="eyebrow">Trust</p>
+        <h2>Read-only by design</h2>
+        <ul class="never">
+          <li>Only GitHub GET requests and GraphQL queries. No comments, approvals, reruns, labels, or merges.</li>
+          <li>No checkout, code execution, log or artifact downloads from the repository it inspects.</li>
+          <li>Missing evidence is reported as <strong>unknown</strong>, never as a guessed pass.</li>
+          <li>Tokens are read from <code>GH_TOKEN</code> or <code>GITHUB_TOKEN</code> only, and never written to a report.</li>
+          <li>Every report records the observation time and the exact head SHA.</li>
+        </ul>
+      </div>
+      <div>
+        <p class="eyebrow">Also included</p>
+        <h2>Repository readiness scan</h2>
+        <p class="intro">A second command inspects a repository's architecture, automation, security, and community health without running its code, and writes JSON plus an accessible HTML report. It also ships as a GitHub Action.</p>
+        <div class="cta">
+          <a class="btn primary" href="./scan/">See Maniflight's self-scan</a>
+          <a class="btn" href="https://github.com/agrovr/maniflight/blob/main/docs/REPOSITORY-SCAN.md">Scan guide</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>Maniflight 1.0.0 · MIT licensed</span>
+    <span><a href="https://github.com/agrovr/maniflight/blob/main/docs/PR-FLIGHT.md">PR Flight guide</a> · <a href="https://github.com/agrovr/maniflight/blob/main/docs/STABILITY.md">Stability</a> · <a href="https://github.com/agrovr/maniflight/blob/main/SECURITY.md">Security</a></span>
+  </div>
+</footer>
+
+<script>
+(() => {
+  const tabs = [...document.querySelectorAll('[role="tab"]')];
+  const select = (tab, focus) => {
+    for (const other of tabs) {
+      const selected = other === tab;
+      other.setAttribute("aria-selected", String(selected));
+      other.tabIndex = selected ? 0 : -1;
+      document.getElementById(other.getAttribute("aria-controls")).hidden = !selected;
+    }
+    if (focus) tab.focus();
+  };
+  tabs.forEach((tab, index) => {
+    tab.addEventListener("click", () => select(tab, false));
+    tab.addEventListener("keydown", (event) => {
+      const step = event.key === "ArrowRight" ? 1 : event.key === "ArrowLeft" ? -1 : 0;
+      if (!step) return;
+      event.preventDefault();
+      select(tabs[(index + step + tabs.length) % tabs.length], true);
+    });
+  });
+  for (const button of document.querySelectorAll("button[data-copy]")) {
+    button.addEventListener("click", async () => {
+      const text = document.getElementById(button.dataset.copy).textContent;
+      try {
+        await navigator.clipboard.writeText(text);
+        button.textContent = "Copied";
+      } catch {
+        const range = document.createRange();
+        range.selectNodeContents(document.getElementById(button.dataset.copy));
+        const selection = window.getSelection();
+        selection.removeAllRanges();
+        selection.addRange(range);
+        button.textContent = "Selected";
+      }
+      setTimeout(() => { button.textContent = "Copy"; }, 1600);
+    });
+  }
+})();
+</script>
+</body>
+</html>

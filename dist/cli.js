@@ -4,7 +4,7 @@ import { pathToFileURL } from "node:url";
 import { Command, InvalidArgumentError } from "commander";
 import { evaluateGates } from "./gates.js";
 import { loadBaselineReport, writeReportArtifacts } from "./output.js";
-import { renderPullRequestFlight } from "./pr/render.js";
+import { renderPullRequestFlight, shouldUseColor } from "./pr/render.js";
 import { runPullRequestFlight } from "./pr/run.js";
 import { compareReports } from "./report/compare.js";
 import { runManiflight } from "./run.js";
@@ -92,6 +92,7 @@ export async function runCli(arguments_ = process.argv, dependencies = {}) {
         .description("Explain live pull-request blockers and who can act next")
         .argument("<owner/repository#number>", "pull request to inspect")
         .option("--json", "emit one schema-versioned JSON document", false)
+        .option("--no-color", "disable colored terminal output (NO_COLOR is also honored)")
         .action(async (target, options) => {
         const inspect = dependencies.inspectPullRequest ?? runPullRequestFlight;
         const token = githubTokenFromEnvironment();
@@ -99,7 +100,11 @@ export async function runCli(arguments_ = process.argv, dependencies = {}) {
             ...(token ? { token } : {}),
             observedAt: (dependencies.now?.() ?? new Date()).toISOString(),
         });
-        process.stdout.write(options.json ? `${JSON.stringify(report, null, 2)}\n` : renderPullRequestFlight(report));
+        process.stdout.write(options.json
+            ? `${JSON.stringify(report, null, 2)}\n`
+            : renderPullRequestFlight(report, {
+                color: options.color !== false && shouldUseColor(process.stdout),
+            }));
     });
     await program.parseAsync(arguments_);
 }
