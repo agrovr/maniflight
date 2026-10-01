@@ -40,7 +40,15 @@ after the matching release passes validation.
 4. Create and push the matching signed or annotated `vX.Y.Z` tag.
 5. The release workflow repeats validation, creates the package archive and checksums, publishes a
    non-prerelease GitHub release, and advances the compatible `vX` Action tag.
-6. Install the archive in a clean directory and smoke-test both commands.
+6. The same workflow publishes that exact archive to the npm registry through
+   [trusted publishing](https://docs.npmjs.com/trusted-publishers), so no long-lived npm token is
+   stored and every version carries a provenance attestation linking it to this repository and
+   workflow run.
+7. Install the published package in a clean directory and smoke-test both commands.
 
-The npm registry is not a supported distribution channel until ownership and provenance are
-verified. Do not remove `private: true` or advertise `npx maniflight` before that work is complete.
+## Distribution
+
+Maniflight is published to the npm registry as [`maniflight`](https://www.npmjs.com/package/maniflight).
+Each GitHub release also attaches the identical `.tgz` archive with a `SHA256SUMS` file for
+installs that should not depend on the registry. Verify a registry install's provenance with
+`npm audit signatures`.

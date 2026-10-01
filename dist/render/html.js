@@ -1,7 +1,7 @@
 import { createHash } from "node:crypto";
 import { REPORT_INTERACTION } from "./interaction.js";
 import { REPORT_STYLES } from "./styles.js";
-import { DOMAIN_LABELS, RENDER_DOMAINS, renderConstellationSvg, statusSymbol } from "./svg.js";
+import { DOMAIN_LABELS, RENDER_DOMAINS, statusSymbol } from "./svg.js";
 const STATUS_LABELS = {
     pass: "Pass",
     warn: "Warning",
@@ -15,6 +15,22 @@ const SEVERITY_LABELS = {
     medium: "Medium",
     high: "High",
 };
+const FLAP_STATUS = {
+    pass: "PASS",
+    warn: "WARN",
+    fail: "FAIL",
+    unknown: "UNKNOWN",
+    not_applicable: "N/A",
+};
+/** Decorative split-flap tiles; the same value is always present as readable text nearby. */
+function flaps(text, width, tone = "") {
+    const tiles = [...text.padEnd(width)]
+        .map((character) => character === " "
+        ? '<span class="flap flap-blank"></span>'
+        : `<span class="flap">${escapeHtml(character)}</span>`)
+        .join("");
+    return `<span class="flaps${tone ? ` ${tone}` : ""}" aria-hidden="true">${tiles}</span>`;
+}
 function escapeHtml(value) {
     return String(value)
         .replaceAll("&", "&amp;")
@@ -125,11 +141,16 @@ function renderSummary(report) {
     <section class="summary" aria-labelledby="report-title">
       <div class="summary-copy">
         <p class="repository-path">${renderRepositoryPath(report)}</p>
+        <p class="eyebrow">Repository readiness scan</p>
         <h1 id="report-title">Repository diagnostics</h1>
         <p class="summary-text">${escapeHtml(reportSummary(report))}</p>
         ${renderPriorityLinks(report)}
       </div>
       <div class="summary-state" role="group" aria-label="Overall result">
+        <div class="score-board">
+          ${flaps(score === null ? "--" : String(Math.round(score)), 3, "flaps-score")}
+          <span class="score-unit" aria-hidden="true">${score === null ? "" : "/100"}</span>
+        </div>
         <div class="verdict-row">
           <p class="verdict">${escapeHtml(overallLabel)}</p>
           <span class="score">${scoreText}</span>
@@ -262,51 +283,56 @@ function renderDomainControl(domain, result) {
     const label = DOMAIN_LABELS[domain];
     const score = clampScore(result.score);
     const scoreText = score === null ? "Not scored" : `${formatMetricNumber(score)}%`;
-    const progress = score === null
-        ? ""
-        : `<progress max="100" value="${score}" aria-hidden="true">${score}%</progress>`;
-    const state = STATUS_LABELS[domainState(result)];
+    const status = domainState(result);
+    const state = STATUS_LABELS[status];
     const confidence = confidencePercent(result.confidence);
     const checkCount = `${result.checks.length} ${result.checks.length === 1 ? "check" : "checks"}`;
+    const meter = score === null
+        ? ""
+        : `<progress class="board-meter" max="100" value="${score}" aria-hidden="true">${score}%</progress>`;
     return `
-    <div class="domain-control" data-domain="${domain}">
-      <button
-        class="domain-button"
-        type="button"
-        data-domain-filter="${domain}"
-        aria-controls="findings"
-        aria-pressed="false"
-        aria-label="Filter to ${label}: ${checkCount}, ${scoreText}, ${state}"
-      >
-        <span class="domain-title-row">
-          <span class="domain-title">${label}</span>
-          <span class="domain-count">${checkCount}</span>
-        </span>
-        ${progress}
-        <span class="domain-note">${state} · ${confidence}% confidence</span>
-      </button>
-    </div>`;
+        <button
+          class="domain-button board-row"
+          type="button"
+          data-domain="${domain}"
+          data-domain-filter="${domain}"
+          aria-controls="findings"
+          aria-pressed="false"
+          aria-label="Filter to ${label}: ${checkCount}, ${scoreText}, ${state}, ${confidence}% confidence"
+        >
+          <span class="board-cell board-domain">${flaps(label.toUpperCase(), 12)}<span class="board-text">${label}</span></span>
+          <span class="board-cell board-checks">${flaps(String(result.checks.length).padStart(2, "0"), 2, "flaps-quiet")}<span class="board-text">${checkCount}</span></span>
+          <span class="board-cell board-status">${flaps(FLAP_STATUS[status], 7, statusClass(status))}<span class="board-text">${state}</span></span>
+          <span class="board-cell board-score"><span class="board-score-value">${scoreText}</span>${meter}<span class="board-note">${confidence}% confidence</span></span>
+        </button>`;
 }
 function renderConstellation(report) {
     return `
     <section class="constellation-panel" aria-labelledby="constellation-title">
       <div class="section-heading">
         <h2 id="constellation-title">Readiness domains</h2>
-        <p>Choose a domain to narrow the evidence. Select the repository core to restore the complete view.</p>
+        <p>Select a domain to narrow the checks below. Select all domains to restore the complete view.</p>
       </div>
-      <div class="constellation">
-        ${renderConstellationSvg()}
+      <div class="board" role="group" aria-label="Domain filters">
+        <div class="board-top">
+          <span><b>Departures</b> · ${escapeHtml(repositoryDisplayName(report))}</span>
+          <span>${countLabel(allChecks(report).length, "check")} · ${confidencePercent(report.overall.confidence)}% confidence</span>
+        </div>
+        <div class="board-labels" aria-hidden="true">
+          <span>Domain</span><span>Checks</span><span>Status</span><span>Score</span>
+        </div>
         <button
-          class="repo-core"
+          class="repo-core board-row board-row-all"
           type="button"
           data-domain-filter="all"
           aria-controls="findings"
           aria-pressed="true"
           aria-label="Show checks from all readiness domains"
         >
-          <span class="repo-star" aria-hidden="true">✦</span>
-          <span class="repo-name">${escapeHtml(repositoryDisplayName(report))}</span>
-          <span class="repo-core-note">All domains</span>
+          <span class="board-cell board-domain">${flaps("ALL DOMAINS", 12)}<span class="board-text">All domains</span></span>
+          <span class="board-cell board-checks">${flaps(String(allChecks(report).length).padStart(2, "0"), 2, "flaps-quiet")}<span class="board-text">${countLabel(allChecks(report).length, "check")}</span></span>
+          <span class="board-cell board-status">${flaps(report.overall.label.toUpperCase().replaceAll("-", " ").slice(0, 7), 7, "flaps-accent")}<span class="board-text">${escapeHtml(report.overall.label.replaceAll("-", " "))}</span></span>
+          <span class="board-cell board-score"><span class="board-score-value">${clampScore(report.overall.score) === null ? "Not scored" : `${formatMetricNumber(clampScore(report.overall.score) ?? 0)}%`}</span><span class="board-note">Show every check</span></span>
         </button>
         ${RENDER_DOMAINS.map((domain) => renderDomainControl(domain, report.domains[domain])).join("")}
       </div>
@@ -499,7 +525,7 @@ export function renderReportHtml(report, comparison) {
 <body>
   <a class="skip-link" href="#main-content">Skip to report</a>
   <header class="topbar">
-    <p class="product-label">MANIFLIGHT / REPOSITORY DIAGNOSTICS</p>
+    <p class="product-label"><span class="visually-hidden">Maniflight repository diagnostics</span>${flaps("MANIFLIGHT", 10, "flaps-mark")}<span class="product-sub" aria-hidden="true">Repository scan</span></p>
     <button class="theme-toggle" id="theme-toggle" type="button">Theme</button>
   </header>
   <main class="shell" id="main-content">
@@ -508,7 +534,7 @@ export function renderReportHtml(report, comparison) {
     ${renderConstellation(report)}
     ${renderFindings(report)}
     <footer class="report-footer">
-      <span>Maniflight ${escapeHtml(report.tool.version)} · schema ${escapeHtml(report.schemaVersion)}</span>
+      <span><a href="https://github.com/agrovr/maniflight" target="_blank" rel="noreferrer noopener">Maniflight</a> ${escapeHtml(report.tool.version)} · schema ${escapeHtml(report.schemaVersion)} · read-only, no code executed</span>
       <span>${generatedAt}</span>
     </footer>
   </main>

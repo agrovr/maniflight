@@ -2,8 +2,15 @@
 
 Notable user-facing changes are recorded here.
 
-## Unreleased
+## 1.1.0 — 2026-09-30
 
+- Publish Maniflight to the npm registry as `maniflight`, with provenance. `npm install --global
+  maniflight` and `npx maniflight` are now supported; GitHub release archives remain available.
+- Redesign the standalone HTML scan report: a departure board of readiness domains that filters
+  the checks, a split-flap score, and refreshed light and dark themes. The report stays
+  self-contained under its strict content security policy.
+- Fix the CLI doing nothing when started through a package-manager symlink, which is how
+  `npm install --global` exposes it on macOS and Linux.
 - Print a **Next steps** section in `maniflight pr` terminal output, one row per actor with its evidence link.
 - List `unknown` signals under a separate **Evidence gaps** heading after observed conditions.
 - Add color for interactive terminals; `--no-color`, `NO_COLOR`, and `FORCE_COLOR` are honored.

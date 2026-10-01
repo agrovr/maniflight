@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
+import { realpathSync } from "node:fs";
 import { resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 import { Command, InvalidArgumentError } from "commander";
@@ -159,8 +160,24 @@ export async function runCli(
   await program.parseAsync(arguments_);
 }
 
-const entrypoint = process.argv[1];
-if (entrypoint && import.meta.url === pathToFileURL(entrypoint).href) {
+/**
+ * Whether this module is the program being run. Package managers start the CLI through a
+ * symlink (for example `bin/maniflight -> .../dist/cli.js`), so the invoked path is resolved
+ * before comparing it with this module's real location.
+ */
+export function isDirectInvocation(
+  invokedPath: string | undefined,
+  moduleUrl: string = import.meta.url,
+): boolean {
+  if (!invokedPath) return false;
+  try {
+    return pathToFileURL(realpathSync(invokedPath)).href === moduleUrl;
+  } catch {
+    return pathToFileURL(invokedPath).href === moduleUrl;
+  }
+}
+
+if (isDirectInvocation(process.argv[1])) {
   runCli().catch((error: unknown) => {
     const message = error instanceof Error ? error.message : "Unknown Maniflight error";
     process.stderr.write(`Maniflight failed: ${message}\n`);

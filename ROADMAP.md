@@ -4,7 +4,6 @@ Maniflight ships capabilities only when implementation, tests, and user document
 
 ## Current priorities
 
-- publish a provenance-backed npm package after registry ownership is verified;
 - improve multi-package repository boundaries;
 - add documented baselines for intentionally accepted findings;
 - extend source locations and remediation guidance.

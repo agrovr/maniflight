@@ -284,7 +284,7 @@ function badge(label: string, value: string, color: string): string {
 await mkdir(out, { recursive: true });
 await writeFile(resolve(out, "banner.svg"), banner());
 await writeFile(resolve(out, "flow.svg"), flow());
-await writeFile(resolve(out, "badge-release.svg"), badge("release", `v${VERSION}`, C.amber));
+await writeFile(resolve(out, "badge-release.svg"), badge("npm", `v${VERSION}`, C.amber));
 await writeFile(resolve(out, "badge-node.svg"), badge("node", "22.12+ | 24", C.green));
 await writeFile(resolve(out, "badge-license.svg"), badge("license", "MIT", C.cyan));
 await writeFile(resolve(out, "badge-readonly.svg"), badge("github", "read-only", C.magenta));

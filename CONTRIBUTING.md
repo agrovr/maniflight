@@ -48,8 +48,8 @@ Run a local scan against the repository:
 npm run scan -- . --output maniflight-report
 ```
 
-For development, install dependencies from source. Supported end-user archives are published
-through GitHub Releases, not the npm registry.
+For development, install dependencies from source. End users install the published package from
+the npm registry or the matching GitHub release archive.
 
 ## Make a focused change
 

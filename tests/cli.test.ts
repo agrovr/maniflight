@@ -1,8 +1,9 @@
-import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { mkdtemp, readFile, rm, symlink, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
+import { pathToFileURL } from "node:url";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { runCli } from "../src/cli.js";
+import { isDirectInvocation, runCli } from "../src/cli.js";
 import type { CheckResult, ManiflightReport } from "../src/model.js";
 import type { PullRequestFlightReport } from "../src/pr/model.js";
 import { runManiflight } from "../src/run.js";
@@ -259,5 +260,26 @@ describe("pull request CLI", () => {
 
     expect(inspectPullRequest).not.toHaveBeenCalled();
     expect(capture.stderr.mock.calls.flat().join("")).not.toContain("argument-secret");
+  });
+});
+
+describe("entrypoint detection", () => {
+  it("runs when started through a package-manager symlink", async () => {
+    const directory = await temporaryDirectory("bin");
+    const target = join(directory, "cli.js");
+    const link = join(directory, "maniflight");
+    await writeFile(target, "");
+    try {
+      await symlink(target, link);
+    } catch {
+      return; // Creating symlinks needs extra privileges on some Windows runners.
+    }
+    const { realpathSync } = await import("node:fs");
+    const moduleUrl = pathToFileURL(realpathSync(target)).href;
+
+    expect(isDirectInvocation(link, moduleUrl)).toBe(true);
+    expect(isDirectInvocation(target, moduleUrl)).toBe(true);
+    expect(isDirectInvocation(join(directory, "other.js"), moduleUrl)).toBe(false);
+    expect(isDirectInvocation(undefined, moduleUrl)).toBe(false);
   });
 });
