@@ -67,14 +67,15 @@ function tiles(
     parts.push(
       `<rect x="${tx}" y="${y}" width="${opts.w}" height="${opts.h}" rx="${Math.max(2, opts.w * 0.08).toFixed(1)}" fill="${C.tile}" stroke="${C.tileEdge}"/>`,
     );
+    // The hinge between the two flaps sits behind the glyph, so it never cuts through a letter.
+    parts.push(
+      `<line x1="${tx + 1}" x2="${tx + opts.w - 1}" y1="${y + opts.h / 2}" y2="${y + opts.h / 2}" stroke="${C.seam}" stroke-width="${opts.h > 50 ? 2 : 1}" stroke-opacity="${opts.h > 50 ? 1 : 0.55}"/>`,
+    );
     if (ch !== " ") {
       parts.push(
         `<text x="${tx + opts.w / 2}" y="${y + opts.h / 2}" text-anchor="middle" dominant-baseline="central" font-family="${opts.font ?? MONO}" font-size="${opts.size}" font-weight="${opts.weight ?? 600}" fill="${opts.color}">${esc(ch)}</text>`,
       );
     }
-    parts.push(
-      `<line x1="${tx + 1}" x2="${tx + opts.w - 1}" y1="${y + opts.h / 2}" y2="${y + opts.h / 2}" stroke="${C.seam}" stroke-width="${opts.h > 50 ? 2 : 1}" stroke-opacity="${opts.h > 50 ? 1 : 0.55}"/>`,
-    );
   });
   return parts.join("");
 }
