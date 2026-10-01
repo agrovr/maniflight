@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="148" height="22" viewBox="0 0 148 22" role="img" aria-label="node: 22.12+ | 24">
+  <title>node: 22.12+ | 24</title>
+  <rect width="148" height="22" rx="4" fill="#11161d"/>
+  <rect x="49" width="99" height="22" rx="4" fill="#6fdc8c"/>
+  <rect x="49" width="6" height="22" fill="#6fdc8c"/>
+  <g font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, Liberation Mono, DejaVu Sans Mono, monospace" font-size="12" font-weight="600">
+    <text x="24.5" y="15" text-anchor="middle" fill="#e8e2d6">node</text>
+    <text x="98.5" y="15" text-anchor="middle" fill="#0b0e13">22.12+ | 24</text>
+  </g>
+</svg>

@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="148" height="22" viewBox="0 0 148 22" role="img" aria-label="github: read-only">
+  <title>github: read-only</title>
+  <rect width="148" height="22" rx="4" fill="#11161d"/>
+  <rect x="63" width="85" height="22" rx="4" fill="#e58ef0"/>
+  <rect x="63" width="6" height="22" fill="#e58ef0"/>
+  <g font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, Liberation Mono, DejaVu Sans Mono, monospace" font-size="12" font-weight="600">
+    <text x="31.5" y="15" text-anchor="middle" fill="#e8e2d6">github</text>
+    <text x="105.5" y="15" text-anchor="middle" fill="#0b0e13">read-only</text>
+  </g>
+</svg>
