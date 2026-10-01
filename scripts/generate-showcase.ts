@@ -275,7 +275,7 @@ ${terminalHtml(scenario.report)}</pre>
     ],
     [
       "How do I know the npm package came from this repository?",
-      "Every release is published by the repository's own release workflow with npm trusted publishing, so each version carries a provenance attestation that links it to the exact commit and workflow run. Run <code>npm audit signatures</code> after installing to verify it.",
+      "Releases after 1.1.0 are published by the repository's own release workflow with npm trusted publishing, so each one carries a provenance attestation that links it to the exact commit and workflow run. Run <code>npm audit signatures</code> after installing to verify it. Every version is also attached to its GitHub release with a SHA256SUMS file.",
     ],
   ];
   const faqHtml = faq
@@ -576,7 +576,7 @@ footer a { color: var(--muted); }
     <div class="wrap">
       <div class="section-head">
         <div><p class="eyebrow">Install</p><h2>Ready for boarding</h2></div>
-        <p>Node.js 22.12+ or 24 on Windows, macOS, or Linux. Published to npm with provenance, and attached to every GitHub release.</p>
+        <p>Node.js 22.12+ or 24 on Windows, macOS, or Linux. Published to npm and attached to every GitHub release with checksums.</p>
       </div>
       <div class="two">
         <div class="panel">
